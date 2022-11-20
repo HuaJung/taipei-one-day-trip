@@ -103,4 +103,4 @@ api.add_resource(AttractionPage, '/api/attractions')
 api.add_resource(AttractionID, '/api/attractions/<int:att_id>')
 api.add_resource(Category, '/api/categories')
 
-app.run(port=3000, debug=True)
+app.run(host='0.0.0.0', port=3000)
