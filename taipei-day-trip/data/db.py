@@ -189,11 +189,11 @@ def data_query_one(sql, condition):
         cnx.close()
 
 
-def data_query_all_dict(sql):
+def data_query_all_dict(sql, condition):
     cnx = db_connection()
     cursor = cnx.cursor(dictionary=True)
     try:
-        cursor.execute(sql)
+        cursor.execute(sql, condition)
         return cursor.fetchall()
     except mysql.connector.Error as err:
         print("Something went wrong: {}".format(err))
@@ -202,11 +202,11 @@ def data_query_all_dict(sql):
         cnx.close()
 
 
-def data_query_all(sql):
+def data_query_all(sql, condition):
     cnx = db_connection()
     cursor = cnx.cursor()
     try:
-        cursor.execute(sql)
+        cursor.execute(sql, condition)
         return cursor.fetchall()
     except mysql.connector.Error as err:
         print("Something went wrong: {}".format(err))
