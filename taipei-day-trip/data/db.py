@@ -23,7 +23,6 @@ TABLES['mrt'] = (
 TABLES['attractions'] = (
     """CREATE TABLE IF NOT EXISTS attractions (
     id BIGINT PRIMARY KEY AUTO_INCREMENT,
-    origin_id BIGINT UNIQUE NOT NULL,
     name VARCHAR(255) NOT NULL,
     cat_id BIGINT NOT NULL,
     description TEXT NOT NULL,
@@ -105,7 +104,6 @@ def process_data():
         attractions = get_data['result']['results']
     att_id = 1
     for attraction in attractions:
-        origin_id = attraction['_id']
         att_name = attraction['name']
         category = attraction['CAT']
         description = attraction['description']
@@ -141,10 +139,10 @@ def process_data():
             mrt_id = mrt_id[0]
 
         add_attraction = (
-            "INSERT INTO attractions (origin_id, name, cat_id, description, address, transport, mrt_id, lat, lng)"
-            "VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)"
+            "INSERT INTO attractions (name, cat_id, description, address, transport, mrt_id, lat, lng)"
+            "VALUES (%s, %s, %s, %s, %s, %s, %s, %s)"
         )
-        cursor.execute(add_attraction, (origin_id, att_name, cat_id, description, address, transport, mrt_id, lat, lng))
+        cursor.execute(add_attraction, (att_name, cat_id, description, address, transport, mrt_id, lat, lng))
 
         add_image = (
             "INSERT INTO images (att_id, image)"
@@ -178,7 +176,7 @@ def db_connection():
 
 def data_query_one(sql, condition):
     cnx = db_connection()
-    cursor = cnx.cursor(buffered=True)
+    cursor = cnx.cursor()
     try:
         cursor.execute(sql, condition)
         return cursor.fetchone()

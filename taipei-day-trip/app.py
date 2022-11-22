@@ -1,7 +1,7 @@
 from flask import *
-from flask_restful import Resource, Api, fields, marshal_with
+from flask_restful import Resource, Api
 from data.db import data_query_one, data_query_all, insert_or_update, data_query_all_dict
-import json
+
 
 app = Flask(__name__)
 api = Api(app)
@@ -29,62 +29,61 @@ class AttractionPage(Resource):
 	def get(self):
 		try:
 			page = int(request.args.get('page'))
-			general_query = "SELECT a.id AS ID, a.origin_id AS id, a.name, c.category, a.description, a.address, a.transport, m.mrt, a.lat, a.lng " \
-						 "FROM attractions AS a INNER JOIN categories c ON a.cat_id=c.id INNER JOIN mrt m ON a.mrt_id=m.id"
-			page_query = ' ORDER BY a.id LIMIT %s OFFSET %s'
-			image_query = 'SELECT image FROM images WHERE att_id=%s'
+			general_query = "SELECT a.id, a.name, c.category, a.description, a.address, a.transport, m.mrt, a.lat, " \
+							"a.lng, (SELECT GROUP_CONCAT(i.image) FROM images i WHERE i.att_id=a.id " \
+							"GROUP BY i.att_id) AS images FROM attractions a INNER JOIN categories c ON cat_id=c.id " \
+							"INNER JOIN mrt m ON mrt_id=m.id"
+			page_query = " ORDER BY a.id LIMIT %s OFFSET %s"
 			att_keyword = request.args.get('keyword')
 			items_per_page = 12
 
+			# page with keyword query string
 			if att_keyword:
-				search_query = general_query + " WHERE category LIKE %s OR name LIKE %s"
-				search_result = data_query_all_dict(search_query, (att_keyword, '%{}%'.format(att_keyword)))
-				search_page = [j for j in range(len(search_result) // 12 + 1)]
-				if page in search_page:
-					offset = [x * 12 for x in search_page]
-					search_query = search_query + page_query
+				search_query = "SELECT COUNT(a.id) FROM attractions AS a INNER JOIN categories c ON a.cat_id=c.id" \
+							   " WHERE c.category LIKE %s OR a.name LIKE %s"
+				search_count = data_query_one(search_query, (att_keyword, '%{}%'.format(att_keyword)))
+				search_pages = search_count[0] / 12
+				search_pages = int(search_pages) + 1 if search_pages is not int else search_pages
+				search_pages_lst = [j for j in range(search_pages)]
+				if page in search_pages_lst:
+					offset = [x * 12 for x in search_pages_lst]
+					search_query = general_query + ' WHERE c.category LIKE %s OR a.name LIKE %s' + page_query
 					results = data_query_all_dict(search_query, (att_keyword, '%{}%'.format(att_keyword), items_per_page, offset[page]))
-					for result in results:
-						image_lst = data_query_all(image_query, (result['ID'],))
-						image_lst = [i[0] for i in image_lst]
-						result['images'] = image_lst
-					next_page = page + 1 if page+1 < len(search_page) else None
+					for result in results:  # convert images string into list
+						result['images'] = result['images'].split(',')
+					next_page = page + 1 if page+1 < len(search_pages_lst) else None
 					return jsonify(nextPage=next_page, data=results)
-				else:
-					return jsonify(nextPage=None, data=[])
+				return jsonify(nextPage=None, data=[])
 
-			data_count = data_query_all('SELECT COUNT(%s) FROM attractions', ('*',))
-			total_pages = [i for i in range(data_count[0][0] // 12 + 1)]
-			if page in total_pages:
-				offset = [x * 12 for x in total_pages]
+			# page query string only
+			data_count = data_query_all('SELECT COUNT(%s) FROM attractions', ('id',))
+			pages_count = data_count[0][0] / 12
+			pages_count = int(pages_count) + 1 if pages_count is not int else pages_count
+			total_pages_lst = [i for i in range(pages_count)]
+			if page in total_pages_lst:
+				offset = [x * 12 for x in total_pages_lst]
 				general_query = general_query + page_query
 				results = data_query_all_dict(general_query, (items_per_page, offset[page]))
-				for result in results:
-					image_lst = data_query_all(image_query, (result['ID'],))
-					image_lst = [i[0] for i in image_lst]
-					result['images'] = image_lst
-					del result['ID']
-				next_page = page + 1 if page+1 < len(total_pages) else None
+				for result in results:  # convert images string into list
+					result['images'] = result['images'].split(',')
+				next_page = page + 1 if page+1 < len(total_pages_lst) else None
 				return jsonify(nextPage=next_page, data=results)
-			else:
-				return jsonify(nextPage=None, data=[])
+			return jsonify(nextPage=None, data=[])
 		except:
 			return make_response(jsonify(error=True, message='page N/A'), 500)
 
 
 class AttractionID(Resource):
 	def get(self, att_id):
-		id_query = "SELECT * FROM attractions WHERE origin_id=%s"
-		image_query = 'SELECT image FROM images WHERE att_id=%s'
+		id_query = "SELECT id FROM attractions WHERE id=%s"
 		try:
-			if data_query_all(id_query, (att_id,)):
-				att_query = "SELECT a.id AS ID, a.origin_id AS id, a.name, c.category, a.description, a.address, a.transport, m.mrt, a.lat, a.lng " \
-							"FROM ({}) AS a INNER JOIN categories c ON a.cat_id=c.id INNER JOIN mrt m ON a.mrt_id=m.id "
-				result = data_query_all_dict(att_query.format(id_query), (att_id,))[0]
-				image_lst = data_query_all(image_query, (result['ID'],))
-				image_lst = [i[0] for i in image_lst]
-				result['images'] = image_lst
-				del result['ID']
+			if data_query_one(id_query, (att_id,)):
+				general_query = "SELECT a.id, a.name, c.category, a.description, a.address, a.transport, m.mrt, a.lat, " \
+								"a.lng, (SELECT GROUP_CONCAT(i.image) FROM images i WHERE i.att_id=a.id " \
+								"GROUP BY i.att_id) AS images FROM attractions a INNER JOIN categories c ON cat_id=c.id " \
+								"INNER JOIN mrt m ON mrt_id=m.id WHERE a.id=%s"
+				result = data_query_all_dict(general_query, (att_id,))[0]   # get dict from list [{}]
+				result['images'] = result['images'].split(',')   # convert images string into list
 				return jsonify(data=result)
 			else:
 				return make_response(jsonify(error=True, message='wrong id'), 400)
