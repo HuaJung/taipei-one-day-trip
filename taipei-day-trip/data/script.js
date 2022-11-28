@@ -1,18 +1,39 @@
 let page = 0;
-let attractionsApi = () => new URL(`${window.origin}/api/attractions?page=${page}`);  // make it a function to allow page updated
+let keyword;
+let attractionsApi = new URL(`${window.origin}/api/attractions`);
 const cardWrapper = document.querySelector('.card-wrapper');
 const cards = document.querySelectorAll('.card');
 const loadMore = document.querySelector('.observer');
 const searchInput = document.querySelector('input[type="text"]');
 const searchBtn = document.querySelector('#search-btn');
 let isLoading = false;
+let observer;
+
+
+const options = {
+    root: null,
+    rootMargin: '100px',
+    threshold: 1
+};
+
+observer = new IntersectionObserver(entries => {
+    console.log(entries)
+    if (entries[0].isIntersecting >= 0.5 && isLoading === false ) {
+
+        attractionsApi.searchParams.set('page', page);
+        if (keyword) {
+            attractionsApi.searchParams.set('keyword', keyword);
+        };
+        isLoading = true;
+        getItems(attractionsApi);
+    };
+}, options);
 
 
 async function getItems(url) {
     try {
-        isLoading = true;
-        const response = await fetch(url)
-        const result = await response.json()
+        const reponse = await fetch(url);
+        const result = await reponse.json();
         const fragment = document.createDocumentFragment();
         const div = document.createElement('div');
 
@@ -22,7 +43,7 @@ async function getItems(url) {
             noData.textContent = '很抱歉無相關景點，請重新搜尋，謝謝！';
             fragment.appendChild(noData);
             
-        } else if (isLoading === true) {
+        } else {
             result.data.forEach((attraction) => {
                 const cardDiv = div.cloneNode();
                 const img = document.createElement('img');
@@ -49,9 +70,15 @@ async function getItems(url) {
                 fragment.appendChild(cardDiv);
             })};
         cardWrapper.appendChild(fragment);
-        const nextPage = result.nextPage;
-        sessionStorage.setItem('nextPage', nextPage);
-        isLoading = false;
+        if (!result.nextPage) {
+            isLoading = true;
+            keyword = ''  //reset keyword
+        } else {
+            page = result.nextPage;
+            isLoading = false;
+        }
+        observer.observe(cardWrapper.lastChild)
+
     } catch(error) {
         console.log(`Error: ${error}`);
     };
@@ -78,39 +105,20 @@ async function getCatgories() {
     };
 };
 
-const options = {
-    root: null,
-    rootMargin: '200px',
-    threshold: 0
-};
-
-const observer = new IntersectionObserver(entries => {
-    if (entries[0].isIntersecting) {
-        const nextPage = sessionStorage.getItem('nextPage');
-        if (nextPage === 'null') return;
-        page = nextPage;
-        getItems(attractionsApi());
-    };
-}, options);
-
-getItems(attractionsApi());
-getCatgories();
-observer.observe(loadMore);
-
 
 // search for category
 searchBtn.addEventListener('click', e => {
     e.preventDefault()
-    let keyword = searchInput.value;
-    if (!keyword || keyword === sessionStorage.getItem('keyword')) return;  // no keyword or same keyword provided
+    keyword = searchInput.value;
+    if (!keyword) return;  // no keyword 
     page = 0;  // default keyword page
-    sessionStorage.setItem('keyword', keyword)
-    let keywordApi= new URL(`${window.origin}/api/attractions?page=${page}&keyword=${keyword}`); 
+    attractionsApi.searchParams.set('page', page);    
+    attractionsApi.searchParams.set('keyword', keyword)
     while (cardWrapper.hasChildNodes()) {
         cardWrapper.removeChild(cardWrapper.firstChild);
     };
-    getItems(keywordApi);
-   
+    isLoading = true;
+    getItems(attractionsApi);
 });
 
 
@@ -131,3 +139,7 @@ searchInput.addEventListener('blur', () => {
     document.querySelector('.category-list').style.display = 'none';
 });
 
+
+attractionsApi.searchParams.set('page', page);
+getItems(attractionsApi);
+getCatgories();
