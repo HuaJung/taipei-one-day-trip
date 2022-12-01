@@ -3,7 +3,7 @@ from flask_restful import Resource, Api
 from data.db import data_query_one, data_query_all, insert_or_update, data_query_all_dict
 
 
-app = Flask(__name__)
+app = Flask(__name__, static_folder='data', static_url_path='/')
 api = Api(app)
 app.config["JSON_AS_ASCII"] = False
 app.config["TEMPLATES_AUTO_RELOAD"] = True
@@ -37,8 +37,7 @@ class AttractionPage(Resource):
 			att_keyword = request.args.get('keyword')
 			items_per_page = 12
 
-			# page with keyword query string
-			if att_keyword:
+			if att_keyword and page >= 0:
 				search_query = "SELECT COUNT(a.id) FROM attractions AS a INNER JOIN categories c ON a.cat_id=c.id" \
 							   " WHERE c.category LIKE %s OR a.name LIKE %s"
 				search_count = data_query_one(search_query, (att_keyword, '%{}%'.format(att_keyword)))
@@ -53,24 +52,23 @@ class AttractionPage(Resource):
 						result['images'] = result['images'].split(',')
 					next_page = page + 1 if page+1 < len(search_pages_lst) else None
 					return jsonify(nextPage=next_page, data=results)
-				return jsonify(nextPage=None, data=[])
-
-			# page query string only
-			data_count = data_query_all('SELECT COUNT(%s) FROM attractions', ('id',))
-			pages_count = data_count[0][0] / 12
-			pages_count = int(pages_count) + 1 if pages_count is not int else pages_count
-			total_pages_lst = [i for i in range(pages_count)]
-			if page in total_pages_lst:
-				offset = [x * 12 for x in total_pages_lst]
-				general_query = general_query + page_query
-				results = data_query_all_dict(general_query, (items_per_page, offset[page]))
-				for result in results:  # convert images string into list
-					result['images'] = result['images'].split(',')
-				next_page = page + 1 if page+1 < len(total_pages_lst) else None
-				return jsonify(nextPage=next_page, data=results)
+			elif page >= 0:
+				data_count = data_query_all('SELECT COUNT(%s) FROM attractions', ('id',))
+				pages_count = data_count[0][0] / 12
+				pages_count = int(pages_count) + 1 if pages_count is not int else pages_count
+				total_pages_lst = [i for i in range(pages_count)]
+				if page in total_pages_lst:
+					offset = [x * 12 for x in total_pages_lst]
+					general_query = general_query + page_query
+					results = data_query_all_dict(general_query, (items_per_page, offset[page]))
+					for result in results:  # convert images string into list
+						result['images'] = result['images'].split(',')
+					next_page = page + 1 if page+1 < len(total_pages_lst) else None
+					return jsonify(nextPage=next_page, data=results)
 			return jsonify(nextPage=None, data=[])
 		except:
-			return make_response(jsonify(error=True, message='page N/A'), 500)
+			return make_response(jsonify(error=True, message='Internal Server Error'), 500)
+
 
 
 class AttractionID(Resource):
