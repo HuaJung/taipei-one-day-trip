@@ -4,48 +4,39 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    {% block title %}
     <title>Taipei Trip 台北一日遊 2.0</title>
+    {% endblock %}
+    
     <script src="https://kit.fontawesome.com/6681bc69b6.js" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="{{url_for('static', filename = 'layout.css')}}">
+    {% block link %}
     <link rel="stylesheet" href="{{url_for('static', filename='style.css')}}">
+    {% endblock %}
 </head>
 <body>
-    <nav class="menu">
-        <h2><a href="/">台北一日遊</a></h2>
-        <ul>
-            <li><a href="#">預定行程</a></li>
-            <li><a href="#">登入/註冊</a></li>
-        </ul>
+    <nav>
+        <div class="navitems">
+            <h2><a href="/">台北一日遊</a></h2>
+            <ul>
+                <li><a href="#">預定行程</a></li>
+                <li><a href="#">登入/註冊</a></li>
+            </ul>
+        </div>
     </nav>
     <main>
-        <div class="banner">
-            <img src="{{url_for('static', filename='[orig] welcome image.png')}}" alt="">
-            <div class="banner-group">
-                <div class="slogan">
-                    <h2>輕鬆享受台北一日悠閒</h1>
-                    <p>探索每個角落，體驗城市的深度旅遊行程</p>
-                </div>
-                <div class="search-group">
-                    <form id="site-search" role="search">
-                        <input type="text" placeholder="輸入景點名稱查詢">
-                        <button id="search-btn"><i class="fa-solid fa-magnifying-glass"></i></button>
-                        <div class="category-list">
-                        </div>
-      
-                    </form>
-                </div>
-            </div>
-        </div>
-
+        {% block content %}
         <div class="container">
-            {% block content %}
             <div class="card-wrapper">
                 <div class="card">
-                    <img src='https://picsum.photos/300/200?random=1'>
-                    <div class="attraction-name">平安鐘</div>
-                    <div class="card-body">
-                        <div class="mrt">忠孝復興</div>
-                        <div class="category">公共藝術</div>
-                    </div>
+                    <a href="">
+                        <img src='https://picsum.photos/300/200?random=1'>
+                        <div class="attraction-name">平安鐘</div>
+                        <div class="card-body">
+                            <div class="mrt">忠孝復興</div>
+                            <div class="category">公共藝術</div>
+                        </div>
+                    </a>
                 </div>
                 <div class="card">
                     <img src='https://picsum.photos/300/200?random=1'>
@@ -144,16 +135,15 @@
                     </div>
                 </div>
             </div>
-            
-            {% endblock%}
         </div>
-        <div class="observer"></div>
-
+        {% endblock%}
     </main>
     <footer>
         COPYRIGHT &copy; 2021台北一日遊
     </footer>
-    <script src="{{url_for('static', filename='script.js')}}"></script>
+
+    {% block script%}
+    {% endblock %}
 
     
 </body>
