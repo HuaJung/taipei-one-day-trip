@@ -8,6 +8,7 @@ button {
     display: grid;
     grid-template-columns: auto minmax(360px, 1200px) auto;
     padding: 0 15px;
+    margin-top: 35px;
     margin-bottom: 90px;
 }
 .grid-container {
