@@ -1,7 +1,7 @@
 .banner {
     display: grid;
     grid-template-columns: 1fr minmax(360px, 1200px) 1fr;
-    grid-template-rows: 1fr 2fr 1fr;
+    grid-template-rows: 1fr minmax(160px, auto) 1fr;
     margin-bottom: 50px
 }
 .banner img{
@@ -22,6 +22,14 @@
 .slogan h2, p {
     color: white;
     padding: 6px 0 6px 0;
+    font-weight: 700;
+}
+.slogan h2 {
+    font-size: 28px;
+}
+.slogan p {
+    font-size: 16px;
+
 }
 .search-group {
     padding: 0 0 0 15px;
@@ -60,7 +68,7 @@
     padding: 5px 5px;
     display: grid;
     gap: 6px;
-    grid-template-columns: repeat(auto-fill, minmax(98px, 120px));
+    grid-template-columns: repeat(auto-fit, minmax(98px, 120px));
 }
 .category-list ul li {
     padding: 10px 10px ;
@@ -76,14 +84,17 @@
 form {
     font-size: 0px;
 }
-
+.container {
+    display: grid;
+    grid-template-columns: auto minmax(min(360px, 100%), 1200px) auto;
+    margin-bottom: 90px;
+}
 .card-wrapper {
     grid-column: 2/3;
     display: grid;
-    grid-template-columns: repeat(auto-fill, 270px);
+    grid-template-columns: repeat(auto-fit, min(270px));
     justify-content: center;
     gap: 30px 30px;
-    
 }
 .card {
     display: grid;
@@ -91,7 +102,6 @@ form {
     border: 1px solid rgb(209, 209, 209);
     border-radius: 7px;
     cursor: pointer;
-    /* width: 270px; */
 }
 .card img {
     grid-row: 1/auto;
@@ -118,7 +128,6 @@ form {
 .mrt, .category {
     color: gray;
 }
-
 .no-data {
     grid-column: 2/4;
     font-size: 20px;
@@ -140,14 +149,13 @@ form {
     .card-wrapper {
         grid-column: 2/3;
         display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(322px, auto));
-        justify-content: center;
+        grid-template-columns: minmax(min(270px,100%), 400px);
         gap: 30px 30px;
+        padding: 0 15px;
     }  
     .card img {
-        grid-row: 1/auto;
         grid-column: 1/-1;
-        width: 321px;
+        grid-row: 1/auto;
         height: 235px;
         object-fit: cover;
     }
@@ -155,7 +163,7 @@ form {
         width: 322px;
         display: grid;
         gap: 4px;
-        grid-template-columns: repeat(auto-fill, minmax(10em, 98px));
+        grid-template-columns: repeat(auto-fit, minmax(10em, 98px));
     }
     
 }

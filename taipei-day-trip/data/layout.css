@@ -16,7 +16,7 @@ a {
 nav {
     display: grid;   
     align-items: center;
-    grid-template-columns: 1fr minmax(360px, 1200px) 1fr;
+    grid-template-columns: 1fr minmax(min(360px, 100%), 1200px) 1fr;
     padding: 5px 0 5px 0;
     position: fixed;
     top: 0;
@@ -32,34 +32,31 @@ nav {
     grid-column: 2/3;
 }
 
-nav h2 {
+.navitems  h2 {
     grid-column: 1/2;
-    padding: 5px 10px 5px 15px;
+    padding: 5px 0px 5px 15px;
 }
-nav a{
+.navitems h2 a{
     color: #448899;
 }
-nav ul {
+.navitems  ul {
     grid-column: 2/3;
     text-align: end;
     font-size: 15px;
     display: flex;
     justify-content: flex-end;
+    align-items: center;
     padding: 0 15px 0 0;
     font-weight: normal;
 }
-nav ul li {
-    padding: 10px;
+.navitems ul li:nth-of-type(1) {
+    padding-right: 10px;
+
 }
-nav li a {
-    text-decoration: none;
+.navitems  li a {
     color: #666666;
 }
-.container {
-    display: grid;
-    grid-template-columns: auto minmax(360px, 1200px) auto;
-    margin-bottom: 90px;
-}
+
 footer {
     background-color: gray;
     color: whitesmoke;

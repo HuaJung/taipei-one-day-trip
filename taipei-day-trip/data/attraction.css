@@ -5,16 +5,16 @@ button {
     cursor: pointer;
 }
 .container {
-    display: grid;
-    grid-template-columns: auto minmax(360px, 1200px) auto;
-    padding: 0 15px;
+    max-width: 1200px;
+    padding: 0 20px;
+    margin: auto;
     margin-top: 35px;
     margin-bottom: 90px;
 }
 .grid-container {
-    gap: 35px 24px;
+    gap: 35px 30px;
     grid-column: 2/3;
-    grid-template-columns: minmax(min(340px,100%), 555px) minmax(min(340px, 100%), 600px);
+    grid-template-columns: minmax(280px, 555px) minmax(280px, 600px);
     grid-template-rows: minmax(350px, 400px) auto auto auto ;
     grid-template-areas:
     "carousel booking"
@@ -26,25 +26,19 @@ button {
 .carousel {
     grid-area: carousel;
     position: relative;
-    /* padding-left: 15px; */
-    /* grid-template-rows: auto auto minmax(auto, 302px); */
 }
 .booking {
     grid-area: booking;
-    padding: 10px;
 }
 .description {
     grid-area: description;
-    padding: 0 20px;
     border-top: 1px solid #E8E8E8;
 }
 .address {
     grid-area: address;
-    padding: 0 20px;
 }
 .transport {
     grid-area: transport;
-    padding: 0 20px;
 }
 .arrow-button {
     position: absolute;
@@ -94,10 +88,10 @@ button {
 .carousel-nav {
     position: absolute;
     bottom: 10px;
-    right: 50%;
-    transform: translateX(52%);
+    left: 50%;
+    transform: translateX(-50%);
     z-index: 2;
-    width: 400px;
+    max-width: 450px;
     text-align: center;
 }
 .carousel-indicator {
@@ -106,32 +100,39 @@ button {
     height: 12px;
     background-color: #ffffff; 
     border-radius: 50%;
-    margin: 0 5px;
+    margin: 0 8px;
     border: 1px solid #ffffff;
 }
 .carousel-indicator.active {
     background-color: #000000;
 }
 .grid-profile{
-    grid-template-rows: auto auto minmax(auto, 302px);
-    gap: 1rem;
+    grid-template-rows: auto auto minmax(min(302px, 100%), auto);
+ 
 }
 .grid-profile h2 {
-    font-weight: 500;
+    font-size: 24px;
+    font-weight: 600;
 }
 .booking-form {
     background-color: #E8E8E8;
     border-radius: 5px;
     padding: 15px 20px;
+    margin-top: 5px;
+}
+p, h5, .schedule, .booking-form button{
+    font-size: 16px;
+}
+.address h5, .transport h5 {
+    line-height: 35px;
+
 }
 .booking-form p {
     margin-top: 10px;
-    font-size: 15px;
 }
 .schedule{
     font-weight: 700;
     margin-top: 12px;
-    font-size: 16px;
 }
 .schedule label {
     font-weight: 500;
@@ -145,11 +146,12 @@ button {
 }
 .date input[type=date] {
     position: relative;
-    padding: 5px 10px;
+    padding: 0px 10px;
     width: 190px;
     height: 35px;
     border: none;
     cursor: pointer;
+    font-size: 16px;
 }
 .time input[type=radio] {
      width: 20px;
@@ -166,7 +168,6 @@ button {
     display: none;
 }
 .booking-form button{
-    font-size: 16px;
     font-weight: 400;
     padding: 8px 20px;
     color: #ffffff;
@@ -184,25 +185,32 @@ button {
 .time input[type=radio]:nth-of-type(2):checked ~ .cost span:nth-of-type(2){
     display: inline-block;
 }
-.description p{
+.description p {
     margin-top: 60px;
 }
 
-@media (max-width: 700px) {
+@media (max-width: 650px) {
     .container {
         padding: 0 ;
+        margin-top: 0;
     }
     .grid-container{
-        grid-template-columns: minmax(min(360px, 100%),1fr);
+        grid-template-columns: minmax(min(300px, 100%), 1fr);
         grid-template-areas: 
-            "carousel"
-            "booking"
-            "description"
-            "address"
-            "transport";
+        "carousel"
+        "booking"
+        "description"
+        "address"
+        "transport";
+        gap: 20px;
     }
     .grid-profile {
         padding: 0px 15px;
+        margin-bottom: 30px;
+        gap: 20px;
+    }
+    .booking, .description, .address, .transport {
+        padding: 0 20px;
     }
 }
 
