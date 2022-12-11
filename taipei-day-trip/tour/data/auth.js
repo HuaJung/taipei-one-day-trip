@@ -12,9 +12,7 @@ const passwordInput = document.querySelectorAll('input[type="password"]')
 const nameInput = document.querySelector('input[type="text"]');
 const userApi = new URL(`/api/user/auth` ,`${window.origin}`);
 const errorMsg = document.querySelectorAll('.error');
-var nameRegEx = /^(?!\s)(?![\s\S]*\s$)[^\n0-9_!¡?÷?¿\/\\+=@#$%ˆ&*(){}|~<>;:[\]]{2,75}$/;
-var usernameRegEx = /^[\S]{2,30}$/;
-var emailRegEx =  /^\w+((-\w+)|(\.\w+))*\@[A-Za-z0-9]+((\.|-)[A-Za-z0-9]+)*\.[A-Za-z]+$/;
+
 
 
 signupLink.addEventListener('click', () => {
@@ -147,35 +145,3 @@ function popout(element) {
     element.showModal();
 }
 
-function nameValidator(){
-    userName = nameInput.value
-    if (nameRegEx.test(userName) === false) {
-        nameInput.setCustomValidity('請勿空白或用特殊字元');
-    } else if (!userName) {
-        nameInput.setCustomValidity('名字不能為空白');
-    } else {
-        nameInput.setCustomValidity('');
-    };
-};
-
-function passwordValidator(input){       
-    password = input.value;
-    if (password.indexOf(' ') >= 0|| password.length < 4 || password.lenght > 25) {
-        input.setCustomValidity('密碼須為4-25字元，且不含空格')
-    } else if (password === null) {
-        input.setCustomValidity('密碼不能為空白')
-    } else {  
-        input.setCustomValidity('');
-    };
-}
-
-function emailValidator(input){
-    email = input.value;
-    if (emailRegEx.test(email) === false) {
-        input.setCustomValidity('郵箱個是不正確');
-    } else if (email === null) {
-        input.setCustomValidity('郵箱不能為空白')
-    }else {
-        input.setCustomValidity('');
-    };
-}
