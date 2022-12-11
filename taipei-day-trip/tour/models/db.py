@@ -2,6 +2,9 @@ import mysql.connector
 from mysql.connector import pooling, errorcode
 import json
 import re
+import os
+from dotenv import load_dotenv
+load_dotenv()
 
 DB_NAME = 'taipei_tour'
 
@@ -45,14 +48,24 @@ TABLES['images'] = (
     ) ENGINE=InnoDB"""
 )
 
+TABLES['members'] = (
+    """CREATE TABLE IF NOT EXISTS members (
+    id BIGINT PRIMARY KEY AUTO_INCREMENT,
+    name VARCHAR(255) NOT NULL,
+    email VARCHAR(255) UNIQUE KEY NOT NULL,
+    password VARCHAR(255) NOT NULL,
+    time DATETIME NOT NULL DEFAULT NOW()
+    ) ENGINE=InnoDB"""
+)
+
 config = {
     'user': 'root',
-    'password': '',
+    'password': os.environ.get('MYSQL_KEY'),
     'host': 'localhost'
 }
 db_config = {
     'user': 'root',
-    'password': '',
+    'password': os.environ.get('MYSQL_KEY'),
     'host': 'localhost',
     'database': DB_NAME
 }
@@ -99,7 +112,7 @@ def create_tables(cnx, cursor):
 def process_data():
     cnx = db_connection()
     cursor = cnx.cursor()
-    with open('taipei-attractions.json', 'r', encoding='utf-8') as json_obj:
+    with open('../data/taipei-attractions.json', 'r', encoding='utf-8') as json_obj:
         get_data = json.load(json_obj)
         attractions = get_data['result']['results']
     att_id = 1

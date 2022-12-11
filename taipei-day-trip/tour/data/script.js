@@ -1,13 +1,13 @@
-let page = 0;
+let observer;
 let keyword;
-let attractionsApi = new URL(`${window.origin}/api/attractions`);
+let page = 0;
+let isLoading = false;
+let baseApi = new URL(`${window.origin}/api/attractions`);
 const cardWrapper = document.querySelector('.card-wrapper');
 const cards = document.querySelectorAll('.card');
-const loadMore = document.querySelector('.observer');
-const searchInput = document.querySelector('input[type="text"]');
+const categoryList = document.querySelector('.category-list');
+const searchInput = document.querySelector('#search-bar');
 const searchBtn = document.querySelector('#search-btn');
-let isLoading = false;
-let observer;
 
 
 const options = {
@@ -17,23 +17,21 @@ const options = {
 };
 
 observer = new IntersectionObserver(entries => {
-    console.log(entries)
     if (entries[0].isIntersecting >= 0.5 && isLoading === false ) {
-
-        attractionsApi.searchParams.set('page', page);
+        baseApi.searchParams.set('page', page);
         if (keyword) {
-            attractionsApi.searchParams.set('keyword', keyword);
+            baseApi.searchParams.set('keyword', keyword);
         };
         isLoading = true;
-        getItems(attractionsApi);
+        getItems(baseApi);
     };
 }, options);
 
 
 async function getItems(url) {
     try {
-        const reponse = await fetch(url);
-        const result = await reponse.json();
+        const response = await fetch(url);
+        const result = await response.json();
         const fragment = document.createDocumentFragment();
         const div = document.createElement('div');
 
@@ -44,7 +42,8 @@ async function getItems(url) {
             fragment.appendChild(noData);
             
         } else {
-            result.data.forEach((attraction) => {
+            result.data.forEach(attraction => {
+                const a = document.createElement('a')
                 const cardDiv = div.cloneNode();
                 const img = document.createElement('img');
                 const attractionDiv = div.cloneNode();
@@ -52,6 +51,7 @@ async function getItems(url) {
                 const mrtDiv = div.cloneNode();
                 const categoryDiv = div.cloneNode();
                 
+                a.href = `/attraction/${attraction.id}`
                 cardDiv.className = 'card';
                 img.src = attraction.images[0];
                 attractionDiv.className = 'attraction-name';
@@ -65,9 +65,10 @@ async function getItems(url) {
                 cardDiv.appendChild(img);
                 cardDiv.appendChild(attractionDiv);
                 cardDiv.appendChild(cardBodyDiv);
+                a.appendChild(cardDiv);
                 cardBodyDiv.appendChild(mrtDiv);
                 cardBodyDiv.appendChild(categoryDiv);
-                fragment.appendChild(cardDiv);
+                fragment.appendChild(a);
             })};
         cardWrapper.appendChild(fragment);
         if (!result.nextPage) {
@@ -90,7 +91,6 @@ async function getCatgories() {
         const categoryApi = new URL(`${window.origin}/api/categories`);
         const response = await fetch(categoryApi);
         const result = await response.json();
-        const categoryList = document.querySelector('.category-list');
         const categoryUl = document.createElement('ul');
         result.data.forEach(category => {
             const categoryLi = document.createElement('li');
@@ -112,26 +112,25 @@ searchBtn.addEventListener('click', e => {
     keyword = searchInput.value;
     if (!keyword) return;  // no keyword 
     page = 0;  // default keyword page
-    attractionsApi.searchParams.set('page', page);    
-    attractionsApi.searchParams.set('keyword', keyword)
+    baseApi.searchParams.set('page', page);    
+    baseApi.searchParams.set('keyword', keyword)
     while (cardWrapper.hasChildNodes()) {
         cardWrapper.removeChild(cardWrapper.firstChild);
     };
     isLoading = true;
-    getItems(attractionsApi);
+    getItems(baseApi);
 });
 
 
 // show category list when foucs 
 searchInput.addEventListener('focus', () => {
-    document.querySelector('.category-list').style.display = 'block';
-    const category = document.querySelectorAll('.category-list li')
+    categoryList.style.display = 'block';
     // attach the selected catogory to the search bar
-    category.forEach(element => {
-        element.addEventListener('mousedown', (e)=> {
-            searchInput.value = e.target.textContent
-    });
-    });
+    categoryList.addEventListener('mousedown', e => {
+        const targetCategory = e.target.closest('li');
+        if (!targetCategory) return;
+        searchInput.value = targetCategory.textContent;
+    }, true);
 });
 
 // hide category list when losing focus
@@ -140,6 +139,6 @@ searchInput.addEventListener('blur', () => {
 });
 
 
-attractionsApi.searchParams.set('page', page);
-getItems(attractionsApi);
+baseApi.searchParams.set('page', page);
+getItems(baseApi);
 getCatgories();
