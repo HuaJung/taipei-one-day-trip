@@ -1,5 +1,5 @@
 let attractionID = window.location.pathname.split('/').pop();
-let attractionAPI = new URL(`/api/attractions/${attractionID}` ,`${window.origin}`);
+let attractionAPI = new URL(`/api/attraction/${attractionID}` ,`${window.origin}`);
 const datePicker = document.querySelector('#date-selection');
 const today = new Date();
 const carousel = document.querySelector('.carousel');

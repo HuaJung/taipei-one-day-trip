@@ -1,0 +1,146 @@
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@100;300;400;700&display=swap');
+
+* {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    box-sizing: border-box;
+}
+body {
+    font-family:'Noto Sans TC', sans-serif;
+    padding-top:55px;
+}
+a {
+    text-decoration: none;
+}
+nav {
+    display: grid;   
+    align-items: center;
+    grid-template-columns: 1fr minmax(min(360px, 100%), 1200px) 1fr;
+    padding: 5px 0 5px 0;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    background-color: #fff;
+    z-index: 100;
+    border-bottom: 1px solid #E8E8E8;
+}
+.navitems {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    grid-column: 2/3;
+}
+
+.navitems  h2 {
+    grid-column: 1/2;
+    padding: 5px 0px 5px 15px;
+}
+.navitems h2 a{
+    color: #448899;
+}
+.navitems ul {
+    grid-column: 2/3;
+    text-align: end;
+    font-size: 15px;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    padding: 0 15px 0 0;
+}
+.navitems ul li:nth-of-type(1) {
+    padding-right: 13px;
+
+}
+.navitems li {
+    color: #666666;
+    font-weight: 400;
+    cursor: pointer;
+}
+.modal {
+    padding: 1em;
+    max-width: 340px;
+    border: 0;
+    border-top: 10px solid transparent;
+    background: 
+        linear-gradient(white, white) padding-box,
+        linear-gradient(270deg, #337788 0%, #66AABB 100%) border-box;
+    border-radius: 6px;
+    box-shadow: 0 0 1em rgba(0, 0, 0, .3);
+    margin: 80px auto;
+}
+.modal::backdrop {
+    background-color: rgba(0, 0, 0, .3);
+}
+#signin, #signup {
+    cursor: pointer;
+}
+.grid-title {
+    display: grid;
+}
+.modal h3 {
+    grid-column: 1/-1;
+    grid-row: 1/1;
+    font-size: 24px;
+    text-align: center;
+    font-weight: 600;
+    color: #666666;
+}
+.close-x {
+    grid-column: 1/-1;
+    grid-row: 1/1;
+    text-align: end;
+    font-size: 20px;
+}
+.modal form {
+    display: grid;
+    gap: 5px;
+    margin-top: 10px;
+}
+.modal form input {
+    padding: 0 10px;
+    width: 310px;
+    height: 47px;
+    border-radius: 5px;
+    border: 1px solid #CCCCCC;
+}
+.modal input[type=submit] {
+    background-color: #448899;
+    color: #FFFFFF;
+    font-size: 17px;
+    font-weight: lighter;
+    cursor: pointer;
+}
+.reminder {
+    color: #666666;
+    text-align: center;
+    margin-top: 10px;
+}
+#signup, #signin:hover{
+    text-decoration: underline;
+}
+
+.error {
+    /* background: rgba(245, 178, 189, 0.5);
+    border: .5px solid rgba(245, 178, 189, 1);
+    border-radius: 6px; */
+    padding: 5px 0;
+    text-align: center;
+    color: rgb(177, 34, 34);
+    font-size: 15px;
+    font-weight: 300;
+    margin-top: 5px;
+
+}
+.error:empty {
+    display: none;
+}
+footer {
+    background-color: gray;
+    color: whitesmoke;
+    height: 85px ;
+    font-size: 14px;
+    line-height: 85px;
+    text-align: center;
+
+}

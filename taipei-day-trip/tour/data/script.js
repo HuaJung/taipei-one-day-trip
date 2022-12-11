@@ -6,7 +6,7 @@ let baseApi = new URL(`${window.origin}/api/attractions`);
 const cardWrapper = document.querySelector('.card-wrapper');
 const cards = document.querySelectorAll('.card');
 const categoryList = document.querySelector('.category-list');
-const searchInput = document.querySelector('input[type="text"]');
+const searchInput = document.querySelector('#search-bar');
 const searchBtn = document.querySelector('#search-btn');
 
 

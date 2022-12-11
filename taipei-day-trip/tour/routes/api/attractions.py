@@ -1,30 +1,7 @@
 from flask import *
-from flask_restful import Resource, Api
-from data.db import data_query_one, data_query_all, insert_or_update, data_query_all_dict
+from tour.extensions import *
 
 
-app = Flask(__name__, static_folder='data', static_url_path='/')
-api = Api(app)
-app.config["JSON_AS_ASCII"] = False
-app.config["TEMPLATES_AUTO_RELOAD"] = True
-app.config["JSON_SORT_KEYS"] = False
-
-# Pages
-@app.route("/")
-def index():
-	return render_template("index.html")
-@app.route("/attraction/<id>")
-def attraction(id):
-	return render_template("attraction.html")
-@app.route("/booking")
-def booking():
-	return render_template("booking.html")
-@app.route("/thankyou")
-def thankyou():
-	return render_template("thankyou.html")
-
-
-# Restful
 class AttractionPage(Resource):
 	def get(self):
 		try:
@@ -66,9 +43,8 @@ class AttractionPage(Resource):
 					next_page = page + 1 if page+1 < len(total_pages_lst) else None
 					return jsonify(nextPage=next_page, data=results)
 			return jsonify(nextPage=None, data=[])
-		except:
+		except KeyError:
 			return make_response(jsonify(error=True, message='Internal Server Error'), 500)
-
 
 
 class AttractionID(Resource):
@@ -85,7 +61,7 @@ class AttractionID(Resource):
 				return jsonify(data=result)
 			else:
 				return make_response(jsonify(error=True, message='wrong id'), 400)
-		except:
+		except KeyError:
 			return make_response(jsonify(error=True, message='Internal Server Error'), 500)
 
 
@@ -96,12 +72,5 @@ class Category(Resource):
 			categories = data_query_all(category_query, ())
 			categories = [i[0] for i in categories]
 			return jsonify(data=categories)
-		except:
+		except KeyError:
 			return make_response(jsonify(error=True, message='Internal Server Error'), 500)
-
-
-api.add_resource(AttractionPage, '/api/attractions')
-api.add_resource(AttractionID, '/api/attractions/<int:att_id>')
-api.add_resource(Category, '/api/categories')
-
-app.run(host='0.0.0.0', port=3000)

@@ -19,7 +19,7 @@
     padding: 0 0 5px 15px;
     margin-bottom: 10px;
 }
-.slogan h2, p {
+.slogan h2, .slogan p {
     color: white;
     padding: 6px 0 6px 0;
     font-weight: 700;
@@ -34,7 +34,7 @@
 .search-group {
     padding: 0 0 0 15px;
 }
-.search-group input[type=text] {
+.search-group input[type=search] {
     font-size: 15px;
     padding: 6px 6px 6px 15px;
     border: none;
