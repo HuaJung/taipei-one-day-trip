@@ -22,3 +22,6 @@ def booking():
 @page.route("/thankyou")
 def thankyou():
 	return render_template("thankyou.html")
+
+
+

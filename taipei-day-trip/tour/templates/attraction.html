@@ -3,7 +3,7 @@
 <title></title>
 {% endblock %}
 {% block link %}
-<link rel="stylesheet" href="{{url_for('static', filename='attraction.css')}}">
+<link rel="stylesheet" href="{{url_for('static', filename='css/attraction.css')}}">
 {% endblock %}
 
 {% block content %}
@@ -22,7 +22,7 @@
                 <form>
                     <h5>訂購導覽行程</h5>
                     <p>以此景點為中心的一日行程，帶您探索城市角落故事</p>
-                    <div class="schedule date">選擇日期：    <input type="date" id="date-selection">
+                    <div class="schedule date">選擇日期：    <input type="date" id="date-selection" required>
                         <!-- <i class="fa-regular fa-calendar"></i> -->
                     </div>
                     <div class="schedule time">選擇時間：
@@ -30,9 +30,10 @@
                         <label for="forenoon">上半天</label>
                         <input type="radio" id="afternoon" name="time" value="afternoon">
                         <label for="afternoon">下半天</label>
-                        <div class="schedule cost">導覽費用：<span>新台幣2000元</span><span>新台幣2500元</span></div>
+                        <div class="schedule cost">導覽費用： 新台幣 <span>2000</span> 元<span>2500</span></div>
                     </div>
-                    <button type="submit">開始預約行程</button>
+                    <button type="button" class="booking-btn">開始預約行程</button>
+                    <div class="booking-error"></div>
                 </form>
             </div>
         </div>
@@ -53,6 +54,6 @@
 {% endblock %}
 
 {% block script %}
-<script src="{{url_for('static', filename='attraction.js')}}"></script>
+<script src="{{url_for('static', filename='javascript/attraction.js')}}"></script>
 
 {% endblock %}

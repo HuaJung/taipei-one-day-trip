@@ -1,0 +1,117 @@
+[class*="grid-"] {
+    display: grid;
+    gap: 15px;
+}
+
+body {
+    color: var(--secondary-gray-70);
+}
+h4 {
+    color: var(--primary-cyan-70);
+    font-size: 17px;
+}
+h3 {
+    font-size: 19px;
+    font-weight: 600;
+}
+.container{
+    margin: 45px auto;
+    max-width: 1200px;
+}
+.wrap {
+    margin: 0 15px;
+    border-bottom: 1px solid var(--secondary-gray-20);
+}
+.grid-card, .grid-contact, .grid-payment {
+    max-width: 1000px;
+    margin: 40px auto;
+}
+.grid-card {
+    grid-template-columns: repeat(auto-fit, minmax(min(240px, 340px), 1fr));
+}
+
+.card-img img {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+}
+.grid-card-info {
+    padding: 25px 0px;
+    position: relative;
+}
+.fa-trash-can {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    font-size: 20px;
+    cursor: pointer;
+}
+.grid-form {
+    padding-top: 20px ;
+}
+.grid-form p{
+    font-weight: 700;
+}
+
+input {
+    width: 230px;
+    height: 38px;
+    word-wrap: break-word;
+    font-size: 16px;
+    font-weight: 500;
+    padding: 10px;
+    border-radius: 7px;
+    border: 1px solid var(--secondary-gray-20);
+    box-shadow: 0 0 2px var(--secondary-gray-20) ;
+}
+.checkout {
+    text-align: end;
+    margin: 40px 15px 0 15px;
+    padding: 0 15px;
+}
+.sum {
+    padding: 20px 5px;
+}
+.confirm-btn {
+    margin-top: 5px;
+    color: var(--additional-white);
+    background-color: var(--primary-cyan-70);
+    padding: 10px 20px;
+    font-size: 19px;
+    font-weight: 400;
+    border-radius: 7px;
+    border: none;
+    margin-bottom: 20px;
+}
+
+.no-data {
+    padding: 35px 0px;
+    font-size: 16px;
+}
+.no-data:empty {
+    display: none;
+}
+
+@media (min-width: 500px) {
+    .grid-card{
+        grid-template-columns: minmax(220px, 266px) minmax(220px, 700px);
+        gap: 18px;
+    }
+    .grid-card, .grid-contact, .grid-payment {
+        padding: 0 10px;
+    }
+    .grid-card-info, .card-img {
+        padding: 0 10px;
+    }
+    .greeting {
+        max-width: 1000px;
+        margin: auto;
+        padding: 0px 10px;
+    }
+    .fa-trash-can {
+        top: 5px;
+        right: 5px;
+        font-size: 20px;
+    }
+
+}
