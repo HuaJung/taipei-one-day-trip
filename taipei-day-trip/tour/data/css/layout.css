@@ -1,4 +1,5 @@
-@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@100;300;400;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans:wght@300;400;500;600;700&display=swap');
+@import url(color.css);
 
 * {
     margin: 0;
@@ -24,14 +25,13 @@ nav {
     right: 0;
     background-color: #fff;
     z-index: 100;
-    border-bottom: 1px solid #E8E8E8;
+    border-bottom: 1px solid var(--secondary-gray-20);
 }
 .navitems {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
     grid-column: 2/3;
 }
-
 .navitems  h2 {
     grid-column: 1/2;
     padding: 5px 0px 5px 15px;
@@ -53,10 +53,11 @@ nav {
 
 }
 .navitems li {
-    color: #666666;
+    color: var(--secondary-gray-70);
     font-weight: 400;
     cursor: pointer;
 }
+/* --------- modal css ---------- */
 .modal {
     padding: 1em;
     max-width: 340px;
@@ -64,7 +65,7 @@ nav {
     border-top: 10px solid transparent;
     background: 
         linear-gradient(white, white) padding-box,
-        linear-gradient(270deg, #337788 0%, #66AABB 100%) border-box;
+        var(--additional-gradient-dark-cyan) border-box;
     border-radius: 6px;
     box-shadow: 0 0 1em rgba(0, 0, 0, .3);
     margin: 80px auto;
@@ -84,7 +85,7 @@ nav {
     font-size: 24px;
     text-align: center;
     font-weight: 600;
-    color: #666666;
+    color: var(--secondary-gray-70);
 }
 .close-x {
     grid-column: 1/-1;
@@ -98,21 +99,26 @@ nav {
     margin-top: 10px;
 }
 .modal form input {
-    padding: 0 10px;
+    padding: 15px;
+    font-size: 16px;
+    font-weight: 500;
     width: 310px;
     height: 47px;
     border-radius: 5px;
-    border: 1px solid #CCCCCC;
+    border: 1px solid var(--secondary-gray-20);
+    box-shadow: 0 0 2px var(--secondary-gray-20) ;
 }
 .modal input[type=submit] {
-    background-color: #448899;
-    color: #FFFFFF;
+    background-color: var(--primary-cyan-70);
+    color: var(--additional-white);
     font-size: 17px;
-    font-weight: lighter;
+    font-weight: 400;
+    line-height: 13px;
     cursor: pointer;
 }
+
 .reminder {
-    color: #666666;
+    color: var(--secondary-gray-70);
     text-align: center;
     margin-top: 10px;
 }
@@ -120,7 +126,7 @@ nav {
     text-decoration: underline;
 }
 
-.error {
+.auth-error {
     /* background: rgba(245, 178, 189, 0.5);
     border: .5px solid rgba(245, 178, 189, 1);
     border-radius: 6px; */
@@ -132,7 +138,7 @@ nav {
     margin-top: 5px;
 
 }
-.error:empty {
+.auth-error:empty {
     display: none;
 }
 footer {

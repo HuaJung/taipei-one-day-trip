@@ -1,4 +1,4 @@
-const openModal = document.querySelector('.auth');
+
 const signinModal = document.querySelector('.signin');
 const signupModal = document.querySelector('.signup');
 const signupLink = document.querySelector('#signup');
@@ -11,8 +11,9 @@ const emailInput = document.querySelectorAll('input[type="email"]');
 const passwordInput = document.querySelectorAll('input[type="password"]')
 const nameInput = document.querySelector('input[type="text"]');
 const userApi = new URL(`/api/user/auth` ,`${window.origin}`);
-const errorMsg = document.querySelectorAll('.error');
-
+const errorMsg = document.querySelectorAll('.auth-error');
+const loginTab = document.querySelector('.auth');
+const bookingTab = document.querySelector('.booking');
 
 
 signupLink.addEventListener('click', () => {
@@ -32,10 +33,9 @@ closeSignup.addEventListener('click', () => {
     errorMsg[1].textContent=''
 });
 
-loginStatusChecker(userApi);
+loginTabChecker();
 
 signinBtn.addEventListener('click', e => {
-    e.preventDefault();
     if (emailInput[0].value && passwordInput[0].value) {
         const data = {
             "email": emailInput[0].value,
@@ -51,8 +51,8 @@ signinBtn.addEventListener('click', e => {
         }
         emailInput[0].reportValidity();
         passwordInput[0].reportValidity();
-
     };
+    e.preventDefault();
 });
 
 signupBtn.addEventListener('click', e => {
@@ -84,7 +84,7 @@ signupBtn.addEventListener('click', e => {
 async function register(data){
     const registerApi = new URL(`/api/user` ,`${window.origin}`);
     const request = {'method': 'POST', 'headers': {'Content-Type': 'application/json'}, 'body': JSON.stringify(data)}
-    response = await fetch(registerApi, request);
+    const response = await fetch(registerApi, request);
     if (response.status === 200) {
         errorMsg[1].style.color = 'green'
         errorMsg[1].textContent = '恭喜註冊成功！請重新登入';
@@ -95,10 +95,29 @@ async function register(data){
     } else {  
         errorMsg[1].textContent = '註冊失敗，請稍後再試';
     };
-}
+};
+
+
+async function loginTabChecker(){
+    const response = await fetch(userApi);
+    const result = await response.json();
+    if (result.data !== null) {
+        loginTab.className = 'signout';
+        loginTab.textContent = '登出系統';
+        signoutAction();
+        bookingAccess();
+    } else {
+        showLoginModal(loginTab);
+        showLoginModal(bookingTab);
+    };
+};
+
 async function login(data){
-    const request = {'method': 'PUT','headers': {'Content-Type': 'application/json'},'body': JSON.stringify(data)}
-    response = await fetch(userApi, request);
+    const request = {
+        'method': 'PUT',
+        'headers': {'Content-Type': 'application/json'},'body': JSON.stringify(data)
+    };
+    const response = await fetch(userApi, request);
     if (response.status === 200) {
         location.reload();
     } else if (response.status === 400) {
@@ -108,40 +127,37 @@ async function login(data){
     } else {
         errorMsg[0].textContent = '登入失敗，請重新登入';
     };
+};
+
+async function logout() {
+    const response = await fetch(userApi, {'method': 'DELETE'})
+    const result = await response.json();
+    if (result.ok === true) {
+        location.reload()
+    };
 
 };
 
-async function loginStatusChecker(url){
-    response = await fetch(url);
-    result = await response.json();
-    if (result.data !== null) {
-        openModal.className = 'signout';
-        openModal.textContent = '登出系統';
-        const signout = document.querySelector('.signout');
-        signout.addEventListener('click', e => {
-            e.preventDefault();
-            e.stopPropagation();
-            logout();
-        });
-        
-    } else {
-        openModal.addEventListener('click', e => {
-            e.preventDefault();
-            e.stopPropagation();
-            popout(signinModal);
-        });
-    };
-}
+function showLoginModal(element) {
+    element.addEventListener('click', e => {
+        e.preventDefault();
+        e.stopPropagation();
+        signinModal.showModal();
+    });
+};
 
-async function logout() {
-    response = await fetch(userApi, {'method': 'DELETE'})
-    result = response.json()
-    if (result.ok === true) {
-        document.cookie = 'token=; Max-Age=-1';
-    };
-    location.reload()
-}
-function popout(element) {
-    element.showModal();
-}
+function signoutAction() {
+    const logoutTab = document.querySelector('.signout');
+    logoutTab.addEventListener('click', e => {
+        e.preventDefault();
+        e.stopPropagation();
+        logout();
+    });
+};
 
+function bookingAccess(){
+    bookingTab.addEventListener('click', e => {
+        e.preventDefault();
+        window.location = `${window.origin}/booking`
+    });
+};

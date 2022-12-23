@@ -1,6 +1,8 @@
 from flask import *
 from tour.extensions import *
+from tour.models.db_sql import data_query_one, insert_or_update
 
+user_api = Blueprint('user_api', __name__)
 parser = reqparse.RequestParser()
 parser.add_argument('name')
 parser.add_argument('email', required=True)
@@ -56,13 +58,18 @@ class Auth(Resource):
             email = args['email']
             pwd = args['password']
             auth_sql = 'SELECT id, password FROM members WHERE email = %s'
-            user_id, pw_hash = data_query_one(auth_sql, (email,))
-            if user_id and bcrypt.check_password_hash(pw_hash, pwd):
-                token = jwt.encode({
-                    'user_id': user_id, 'exp': datetime.utcnow() + timedelta(days=7)
-                }, current_app.config['SECRET_KEY'])
-                save_to_cookie = f'token={token}; Max-Age={7*24*60*60}'
-                return make_response(jsonify(ok=True), 200, {'Set-Cookie': save_to_cookie})
+            has_record = data_query_one(auth_sql, (email,))
+            if has_record:
+                user_id, pw_hash = has_record
+                if bcrypt.check_password_hash(pw_hash, pwd):
+                    token = jwt.encode({
+                        'user_id': user_id, 'exp': datetime.utcnow() + timedelta(days=7)
+                    }, current_app.config['SECRET_KEY'])
+                    res = make_response(jsonify(ok=True))
+                    res.set_cookie(key='token', value=token, max_age=7*24*60*60, path='/api')
+                    return res
+                    # save_to_cookie = f'token={token}; Max-Age={7 * 24 * 60 * 60}; Path="/api"'
+                    # return make_response(jsonify(ok=True), 200, {'Set-Cookie': save_to_cookie})
             return make_response((jsonify(error=True, message='郵箱或密碼錯誤'), 400))
         except KeyError:
             abort(500, message=jsonify(error=True, message='內部伺服器錯誤，請稍後再試。'))
@@ -70,6 +77,7 @@ class Auth(Resource):
     def delete(self):
         """User Logout"""
         if request.cookies.get('token'):
-            delete_cookies = 'token=; Max-Age=-1'
-            return make_response(jsonify(ok=True), 200, {'Set-Cookie': delete_cookies})
+            res = make_response(jsonify(ok=True))
+            res.set_cookie(key='token', value='', max_age=-1, path='/api')
+            return res
         return make_response((jsonify(message='not login yet')))

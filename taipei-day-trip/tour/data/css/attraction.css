@@ -21,7 +21,7 @@ button {
     "description description"
     "address address"
     "transport transport";
-    color: #666666;
+    color: var(--secondary-gray-70);
 }
 .carousel {
     grid-area: carousel;
@@ -32,7 +32,7 @@ button {
 }
 .description {
     grid-area: description;
-    border-top: 1px solid #E8E8E8;
+    border-top: 1px solid var(--secondary-gray-20);
 }
 .address {
     grid-area: address;
@@ -45,7 +45,7 @@ button {
     top: 50%;
     transform: translateY(-50%);
     border-radius: 50%;
-    background-color: white;
+    background-color: var(--additional-white);
     opacity: .75;
     padding: 3px 9px;
     border: none;
@@ -104,23 +104,22 @@ button {
     border: 1px solid #ffffff;
 }
 .carousel-indicator.active {
-    background-color: #000000;
+    background-color: var(--additional-black);
 }
 .grid-profile{
     grid-template-rows: auto auto minmax(min(302px, 100%), auto);
- 
 }
 .grid-profile h2 {
     font-size: 24px;
     font-weight: 600;
 }
 .booking-form {
-    background-color: #E8E8E8;
+    background-color: var(--secondary-gray-20);
     border-radius: 5px;
     padding: 15px 20px;
     margin-top: 5px;
 }
-p, h5, .schedule, .booking-form button{
+p, h5, .schedule, .booking-btn{
     font-size: 16px;
 }
 .address h5, .transport h5 {
@@ -166,7 +165,7 @@ p, h5, .schedule, .booking-form button{
     font-weight: 500;
     display: none;
 }
-.booking-form button{
+.booking-btn {
     font-weight: 400;
     padding: 8px 20px;
     color: #ffffff;
@@ -174,6 +173,16 @@ p, h5, .schedule, .booking-form button{
     border-radius: 7px;
     border: none;
     margin-top: 20px;
+}
+.booking-error {
+    padding: 5px 10px;
+    color: rgb(177, 34, 34);
+    font-size: 15px;
+    margin-top: 5px;
+
+}
+.booking-error:empty {
+    display: none;
 }
 .time input[type=radio]:checked {
     background-color: #448899;

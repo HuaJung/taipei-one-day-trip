@@ -1,0 +1,14 @@
+:root {
+    --primary-cyan-70: #448899;
+    --primary-cyan-50: #66AABB;
+    --primary-cyan-20: #AADDEE;
+    --secondary-gray-70: #666666;
+    --secondary-gray-50: #757575;
+    --secondary-gray-20: #E8E8E8;
+    --secondary-gray-10: #F8F8F8;
+    --additional-black: #000000;
+    --additional-white: #FFFFFF;
+    --additional-blue-gray: #AABBCC;
+    --additional-gradient-dark-cyan: linear-gradient(135deg, #337788 0%, #66AABB 100%);
+    --additional-gradient-ligtht-cyan: linear-gradient(135deg, #AADDEE 0%, #66AABB 100%);
+}

@@ -1,12 +1,14 @@
-import mysql.connector
-from mysql.connector import pooling, errorcode
-import json
-import re
-import os
-from dotenv import load_dotenv
-load_dotenv()
+# import mysql.connector
+# from mysql.connector import pooling, errorcode
+# import json
+# import re
+# import os
+# from dotenv import load_dotenv
+# load_dotenv()
+from tour.extensions import *
+from tour.config import Config
+from db_sql import data_query_one, db_connection
 
-DB_NAME = 'taipei_tour'
 
 TABLES = {}
 TABLES['categories'] = (
@@ -58,35 +60,48 @@ TABLES['members'] = (
     ) ENGINE=InnoDB"""
 )
 
-config = {
-    'user': 'root',
-    'password': os.environ.get('MYSQL_KEY'),
-    'host': 'localhost'
-}
-db_config = {
-    'user': 'root',
-    'password': os.environ.get('MYSQL_KEY'),
-    'host': 'localhost',
-    'database': DB_NAME
-}
+TABLES['booking'] = (
+    """CREATE TABLE IF NOT EXISTS booking (
+    id BIGINT PRIMARY KEY AUTO_INCREMENT,
+    user_id BIGINT NOT NULL,
+    att_id BIGINT NOT NULL,
+    date DATE NOT NULL,
+    time VARCHAR(255) NOT NULL,
+    price BIGINT NOT NULL,
+    FOREIGN KEY(user_id) REFERENCES members(id),
+    FOREIGN KEY(att_id) REFERENCES attractions(id)
+    ) ENGINE=InnoDB"""
+)
+
+# config = {
+#     'user': 'root',
+#     'password': os.environ.get('MYSQL_KEY'),
+#     'host': 'localhost'
+# }
+# db_config = {
+#     'user': 'root',
+#     'password': os.environ.get('MYSQL_KEY'),
+#     'host': 'localhost',
+#     'database': DB_NAME
+# }
 
 cnx_pool = pooling.MySQLConnectionPool(
     pool_name='travel_pool',
     pool_size=8,
     pool_reset_session=True,
-    **config
+    **Config.config
 )
 
 
 def create_database(cursor):
     try:
-        cursor.execute('USE {}'.format(DB_NAME))
+        cursor.execute('USE {}'.format(Config.DB_NAME))
     except mysql.connector.Error as err:
-        print('Database {} does not exists.'.format(DB_NAME))
+        print('Database {} does not exists.'.format(Config.DB_NAME))
         if err.errno == errorcode.ER_BAD_DB_ERROR:
-            cursor.execute("CREATE DATABASE {} DEFAULT CHARACTER SET 'utf8'".format(DB_NAME))
-            print('Database {} created successfully.'.format(DB_NAME))
-            cursor.execute('USE {}'.format(DB_NAME))
+            cursor.execute("CREATE DATABASE {} DEFAULT CHARACTER SET 'utf8'".format(Config.DB_NAME))
+            print('Database {} created successfully.'.format(Config.DB_NAME))
+            cursor.execute('USE {}'.format(Config.DB_NAME))
         else:
             print('Failed creating database: {}'.format(err))
             exit(1)
@@ -171,72 +186,72 @@ def process_data():
     cnx.close()
 
 
-def db_connection():
-    cnx_pool_db = pooling.MySQLConnectionPool(
-        pool_name='travel_pool',
-        pool_size=8,
-        pool_reset_session=True,
-        **db_config
-    )
-    try:
-        cnx = cnx_pool_db.get_connection()
-        return cnx
-    except mysql.connector.PoolError as err:
-        print('Error: {}'.format(err))
-    except mysql.connector.Error as err:
-        print('Something goes wrong: {}'.format(err))
-
-
-def data_query_one(sql, condition):
-    cnx = db_connection()
-    cursor = cnx.cursor()
-    try:
-        cursor.execute(sql, condition)
-        return cursor.fetchone()
-    except mysql.connector.Error as err:
-        print("Something went wrong: {}".format(err))
-    finally:
-        cursor.close()
-        cnx.close()
-
-
-def data_query_all_dict(sql, condition):
-    cnx = db_connection()
-    cursor = cnx.cursor(dictionary=True)
-    try:
-        cursor.execute(sql, condition)
-        return cursor.fetchall()
-    except mysql.connector.Error as err:
-        print("Something went wrong: {}".format(err))
-    finally:
-        cursor.close()
-        cnx.close()
-
-
-def data_query_all(sql, condition):
-    cnx = db_connection()
-    cursor = cnx.cursor()
-    try:
-        cursor.execute(sql, condition)
-        return cursor.fetchall()
-    except mysql.connector.Error as err:
-        print("Something went wrong: {}".format(err))
-    finally:
-        cursor.close()
-        cnx.close()
-
-
-def insert_or_update(sql, condition):
-    cnx = db_connection()
-    cursor = cnx.cursor()
-    try:
-        cursor.execute(sql, condition)
-        cnx.commit()
-    except mysql.connector.Error as err:
-        print("Something went wrong: {}".format(err))
-    finally:
-        cursor.close()
-        cnx.close()
+# def db_connection():
+#     cnx_pool_db = pooling.MySQLConnectionPool(
+#         pool_name='travel_pool',
+#         pool_size=8,
+#         pool_reset_session=True,
+#         **Config.db_config
+#     )
+#     try:
+#         cnx = cnx_pool_db.get_connection()
+#         return cnx
+#     except mysql.connector.PoolError as err:
+#         print('Error: {}'.format(err))
+#     except mysql.connector.Error as err:
+#         print('Something goes wrong: {}'.format(err))
+#
+#
+# def data_query_one(sql, condition):
+#     cnx = db_connection()
+#     cursor = cnx.cursor()
+#     try:
+#         cursor.execute(sql, condition)
+#         return cursor.fetchone()
+#     except mysql.connector.Error as err:
+#         print("Something went wrong: {}".format(err))
+#     finally:
+#         cursor.close()
+#         cnx.close()
+#
+#
+# def data_query_all_dict(sql, condition):
+#     cnx = db_connection()
+#     cursor = cnx.cursor(dictionary=True)
+#     try:
+#         cursor.execute(sql, condition)
+#         return cursor.fetchall()
+#     except mysql.connector.Error as err:
+#         print("Something went wrong: {}".format(err))
+#     finally:
+#         cursor.close()
+#         cnx.close()
+#
+#
+# def data_query_all(sql, condition):
+#     cnx = db_connection()
+#     cursor = cnx.cursor()
+#     try:
+#         cursor.execute(sql, condition)
+#         return cursor.fetchall()
+#     except mysql.connector.Error as err:
+#         print("Something went wrong: {}".format(err))
+#     finally:
+#         cursor.close()
+#         cnx.close()
+#
+#
+# def insert_or_update(sql, condition):
+#     cnx = db_connection()
+#     cursor = cnx.cursor()
+#     try:
+#         cursor.execute(sql, condition)
+#         cnx.commit()
+#     except mysql.connector.Error as err:
+#         print("Something went wrong: {}".format(err))
+#     finally:
+#         cursor.close()
+#         cnx.close()
 
 
 def main():
@@ -245,7 +260,7 @@ def main():
         cursor = cnx.cursor()
         create_database(cursor)
         create_tables(cnx, cursor)
-        process_data()
+        # process_data()
     except mysql.connector.PoolError as err:
         print('Error: {}'.format(err))
     except mysql.connector.Error as err:
