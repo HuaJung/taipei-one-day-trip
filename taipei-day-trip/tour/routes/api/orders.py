@@ -68,7 +68,6 @@ class Orders(Resource):
         }
         try:
             response = requests.post(sandbox_url, json=payload, headers=headers, timeout=30)
-            print(response.json())
             r = response.json()
             if r['status'] == 0:
                 rec_trade_id = r['rec_trade_id']

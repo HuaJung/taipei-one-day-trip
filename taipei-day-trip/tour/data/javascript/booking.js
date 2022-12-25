@@ -314,10 +314,8 @@ function onSubmit(event) {
     // Get prime
     TPDirect.card.getPrime((result) => {
         if (result.status !== 0) {
-            alert('get prime error ' + result.msg)
             return
         }
-        alert('get prime success, prime: ' + result.card.prime)
         const prime = result.card.prime;
         placeOrder(nameField, emailField, phoneField, prime);     
     })

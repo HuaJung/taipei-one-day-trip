@@ -40,7 +40,7 @@ function renderOderDetail(result){
     const timeLi = document.querySelector('.time');
     const costLi = document.querySelector('.cost');
     const addressLi = document.querySelector('.address');
-    const orderStatus = orderResult.staus === 0? '已付款': '未付款';
+    const orderStatus = orderResult.status === 0? '已付款': '未付款';
     const tripTime = orderResult.trip.time === 'forenoon'? '上午9時至中午12時' : '下午1時至下午5時'
 
     orderNumberDiv.textContent = `訂單編號：${orderResult.number}`;
