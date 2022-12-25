@@ -1,5 +1,6 @@
 from flask import *
 from tour.models.db_sql import *
+from tour.extensions import *
 
 attraction_api = Blueprint('attraction_api', __name__)
 
