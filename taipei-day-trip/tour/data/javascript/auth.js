@@ -7,9 +7,6 @@ const closeSignin = document.querySelector('#close-signin');
 const closeSignup = document.querySelector('#close-signup');
 const signinBtn = document.querySelector('#signin-btn');
 const signupBtn = document.querySelector('#signup-btn');
-const emailInput = document.querySelectorAll('input[type="email"]');
-const passwordInput = document.querySelectorAll('input[type="password"]')
-const nameInput = document.querySelector('input[type="text"]');
 const userApi = new URL(`/api/user/auth` ,`${window.origin}`);
 const errorMsg = document.querySelectorAll('.auth-error');
 const loginTab = document.querySelector('.auth');
@@ -36,49 +33,42 @@ closeSignup.addEventListener('click', () => {
 loginTabChecker();
 
 signinBtn.addEventListener('click', e => {
-    if (emailInput[0].value && passwordInput[0].value) {
-        const data = {
-            "email": emailInput[0].value,
-            "password": passwordInput[0].value
-         };
-         login(data)
-    } else {
-        if (!emailInput[0].value){
-            emailInput[0].setCustomValidity('此欄必填');
-        }
-        if (!passwordInput[0].value){
-            passwordInput[0].setCustomValidity('此欄必填');
-        }
-        emailInput[0].reportValidity();
-        passwordInput[0].reportValidity();
-    };
     e.preventDefault();
+    const loginEmail = document.querySelectorAll('input[type="email"]')[0];
+    const loginPassword = document.querySelectorAll('input[type="password"]')[0];
+
+    emptyFieldChecker(loginEmail);
+    emptyFieldChecker(loginPassword);
+    
+    if (loginEmail.value && loginPassword.value) {
+        console.log(loginEmail.value);
+        const data = {
+            "email": loginEmail.value,
+            "password": loginPassword.value
+            };
+            login(data);
+    };
+    
 });
 
 signupBtn.addEventListener('click', e => {
     e.preventDefault();
-    if (nameInput.value && emailInput[1].value && passwordInput[1].value) {
+    const registerName = document.querySelector('input[type="text"]');
+    const registerEmail = document.querySelectorAll('input[type="email"]')[1];
+    const registerPassword = document.querySelectorAll('input[type="password"]')[1];
+    
+    emptyFieldChecker(registerName);
+    emptyFieldChecker(registerEmail);
+    emptyFieldChecker(registerPassword);
+
+    if (registerName.value && registerEmail.value && registerPassword.value) {
         const data = {
-            "name": nameInput.value,
-            "email": emailInput[1].value,
-            "password": passwordInput[1].value
+            "name": registerName.value,
+            "email": registerEmail.value,
+            "password": registerPassword.value
         };
         register(data);
-    } else {
-        if (!nameInput.value){
-            nameInput.setCustomValidity('此欄必填');
-        }
-        if (!emailInput[1].value){
-            emailInput[1].setCustomValidity('此欄必填');
-        }
-        if (!passwordInput[1].value){
-            passwordInput[1].setCustomValidity('此欄必填');
-        }
-        nameInput.reportValidity();
-        emailInput[1].reportValidity();
-        passwordInput[1].reportValidity();
     };
-    
 });
 
 async function register(data){
@@ -113,6 +103,7 @@ async function loginTabChecker(){
 };
 
 async function login(data){
+    console.log('hi')
     const request = {
         'method': 'PUT',
         'headers': {'Content-Type': 'application/json'},'body': JSON.stringify(data)
@@ -161,3 +152,12 @@ function bookingAccess(){
         window.location = `${window.origin}/booking`
     });
 };
+
+function emptyFieldChecker(input) {
+    if (!input.value){
+        input.setCustomValidity('此欄必填');
+        input.reportValidity()
+    } else {
+        input.setCustomValidity('')
+    };
+}

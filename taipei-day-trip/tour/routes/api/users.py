@@ -27,7 +27,6 @@ def token_required(f):
 class Register(Resource):
     def post(self):
         args = parser.parse_args()
-        # args = request.get_json()
         try:
             email_sql = 'SELECT id FROM members WHERE email = %s'
             repeat_email = data_query_one(email_sql, (args['email'],))
@@ -38,7 +37,7 @@ class Register(Resource):
                 return make_response(jsonify(ok=True))
             return make_response((jsonify(error=True, message='此郵件已註冊'), 400))
         except KeyError:
-            abort(500, message=jsonify(error=True, message='內部伺服器錯誤，請稍後再試。'))
+            return make_response(jsonify(error=True, message='內部伺服器錯誤，請稍後再試。'), 500)
 
 
 class Auth(Resource):
@@ -54,7 +53,6 @@ class Auth(Resource):
         """User Login"""
         try:
             args = parser.parse_args()
-            # args = request.get_json()
             email = args['email']
             pwd = args['password']
             auth_sql = 'SELECT id, password FROM members WHERE email = %s'
@@ -68,11 +66,9 @@ class Auth(Resource):
                     res = make_response(jsonify(ok=True))
                     res.set_cookie(key='token', value=token, max_age=7*24*60*60, path='/api')
                     return res
-                    # save_to_cookie = f'token={token}; Max-Age={7 * 24 * 60 * 60}; Path="/api"'
-                    # return make_response(jsonify(ok=True), 200, {'Set-Cookie': save_to_cookie})
             return make_response((jsonify(error=True, message='郵箱或密碼錯誤'), 400))
         except KeyError:
-            abort(500, message=jsonify(error=True, message='內部伺服器錯誤，請稍後再試。'))
+            return make_response(jsonify(error=True, message='內部伺服器錯誤，請稍後再試。'), 500)
 
     def delete(self):
         """User Logout"""

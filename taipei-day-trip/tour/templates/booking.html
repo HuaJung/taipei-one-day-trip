@@ -13,75 +13,16 @@
         <h3>您好，<span></span>，待預定的行程如下：</h3>
         <div class="no-data"></div>
     </div>
-    <!-- <div class="wrap">
-        <div class="grid-card">
-            <div class="card-img">
-                <img>
-            </div>
-            <div class="grid-card-info">
-                <h4>台北一日遊：<span class="attraction-name"></span></h4>
-                <div class="date">日期：</div>
-                <div class="time">時間：</div>
-                <div class="cost">費用：新台幣<span></span>元</div>
-                <div class="address">地點：</div>
-                <i class="fa-solid fa-trash-can"></i>
-            </div>
-        </div>
-    </div>
-    <div class="wrap">
-        <div class="grid-contact">
-            <h3>您的聯絡資訊</h3>
-            <form class="grid-form" action="">
-                <label>聯絡姓名：<input
-                    type="text"
-                    id="name"
-                    required></label>
-                <br>
-                <label>連絡信箱：<input
-                    type="email"
-                    id="email"
-                    required></label>
-                <br>
-                <label>手機號碼：<input
-                    type="tel"
-                    required></label>
-                <br>
-                <p>請保持手機暢通，準時到達，導覽人員將用手機與您聯繫，務必留下正確的聯絡方式</p>
-            </form>
-        </div>
-    </div>
-    <div class="wrap">
-        <div class="grid-payment">
-            <h3>信用卡付款資訊</h3>
-            <form class="grid-form" action="">
-                <label>卡片號碼：<input
-                    type="tel" inputmode="numeric" placeholder="**** **** **** ****" pattern="[0-9\s]{13,19}"
-                    required></label>
-                <br>
-                <label>過期時間：<input
-                    type="text"
-                    pattern="(?:0[1-9]|1[0-2])/[0-9]{2}"
-                    placeholder="MM / YY"
-                    required
-                    /></label>
-                <br>
-                <label>驗證密碼：<input
-                    type="tel" inputmode="numeric" maxlength="3" minlength="3" placeholder="CVV"
-                    required></label>
-                <br>
-            </form>
-        </div>
-    </div> -->
-    <!-- <div class="checkout">
-        <div class="sum">總價：新台幣<span>2000</span>元</div>
-        <button type="submit" class="confirm-btn">確認訂購並付款</button>
-    </div> -->
 </div>
 
 
 {% endblock %}
 
 {% block script %}
+
+<script src="https://js.tappaysdk.com/sdk/tpdirect/v5.14.0"></script>
+
 <script src="{{url_for('static', filename='javascript/booking.js')}}"></script>
+
 
 {% endblock %}
