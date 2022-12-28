@@ -10,6 +10,7 @@
 body {
     font-family:'Noto Sans TC', sans-serif;
     padding-top:55px;
+    color: var(--secondary-gray-70);
 }
 a {
     text-decoration: none;

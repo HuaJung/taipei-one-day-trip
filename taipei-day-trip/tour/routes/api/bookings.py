@@ -1,9 +1,10 @@
 from flask import *
 from tour.extensions import *
-from tour.models.schema import BookingSchema
-from tour.models.db_sql import data_query_one_dict, data_query_one, insert_or_update, data_query_all_dict
+from tour.models.schema import BookingAttractionSchema
+from tour.models.db_sql import data_query_one_dict, data_query_one, insert_or_update
 
-booking_schema = BookingSchema()
+booking_api = Blueprint('booking_api', __name__)
+booking_schema = BookingAttractionSchema()
 
 
 def token_required(f):
@@ -24,6 +25,9 @@ def token_required(f):
 class Booking(Resource):
     @token_required
     def post(self, user_id):
+        errors = booking_schema.validate(request.json)
+        if errors:
+            return errors, 400
         try:
             booking_data = booking_schema.load(request.json)
             att_id = booking_data['attractionId']
@@ -39,11 +43,9 @@ class Booking(Resource):
             elif has_record is None:
                 insert_sql = 'INSERT INTO booking (user_id, att_id, date, time, price) VALUES (%s, %s, %s, %s,%s)'
                 insert_or_update(insert_sql, (user_id, att_id, date, time, price))
-            else:
-                return make_response(jsonify(error=True, message='未知的錯誤'), 400)
             return make_response(jsonify(ok=True))
         except KeyError:
-            abort(500, message=jsonify(error=True, message='內部伺服器錯誤，請稍後再試。'))
+            return make_response(jsonify(error=True, message='內部伺服器錯誤，請稍後再試。'), 500)
 
     @token_required
     def get(self, user_id):
@@ -54,11 +56,11 @@ class Booking(Resource):
         if booking_data:
             # rebuild api format for attraction
             attraction_info = {}
-            attraction = booking_data['attraction'].split(',')
-            attraction_info['id'] = attraction[0]
-            attraction_info['name'] = attraction[1]
-            attraction_info['address'] = attraction[2]
-            attraction_info['image'] = attraction[-1]
+            attraction_lst = booking_data['attraction'].split(',')
+            attraction_info['id'] = attraction_lst[0]
+            attraction_info['name'] = attraction_lst[1]
+            attraction_info['address'] = attraction_lst[2]
+            attraction_info['image'] = attraction_lst[-1]
             booking_data['attraction'] = attraction_info
             booking_data['date'] = str(booking_data['date'])
             return make_response(jsonify(data=booking_data))

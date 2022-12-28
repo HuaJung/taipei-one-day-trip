@@ -26,7 +26,7 @@ bookingBtn.addEventListener('click', (e) => {
         return
     }
     const bookingTime = document.querySelector('input[name="time"]:checked').value;
-    const bookingCost = bookingTime==='forenoon'? 2000 : 2500;
+    const bookingCost = bookingTime === 'forenoon'? 2000 : 2500;
     const bookingData =  {
         "attractionId": attractionID,
         "date": bookingDate,

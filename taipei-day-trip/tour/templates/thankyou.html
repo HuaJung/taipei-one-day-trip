@@ -1,0 +1,42 @@
+{% extends 'base.html' %}
+{% block title %}
+<title>感謝訂購</title>
+{% endblock %}
+{% block link %}
+<link rel="stylesheet" href="{{url_for('static', filename='css/thankyou.css')}}">
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="wrap">
+        <div class="thanks-header">
+            <h2><i class="fa-solid fa-quote-left"></i><i class="fa-solid fa-quote-right"></i></h2>
+        </div>
+        <div class="grid-order">
+            <div class="order-number"></div>
+            <div class="order-status"></div>
+            <div class="order-info"></div>
+            <div class="grid-card">
+                <div class="card-img">
+                    <img >
+                </div>
+                <ul class="grid-card-info">
+                    <li class="attraction-name"> </li>
+                    <li class="date"></li>
+                    <li class="time"></li>
+                    <li class="cost"></li>
+                    <li class="address"></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+{% endblock %}
+
+{% block script %}
+<script src="{{url_for('static', filename='javascript/thankyou.js')}}"></script>
+
+{% endblock %}

@@ -56,6 +56,7 @@ TABLES['members'] = (
     name VARCHAR(255) NOT NULL,
     email VARCHAR(255) UNIQUE KEY NOT NULL,
     password VARCHAR(255) NOT NULL,
+    phone VARCHAR(30),
     time DATETIME NOT NULL DEFAULT NOW()
     ) ENGINE=InnoDB"""
 )
@@ -66,30 +67,46 @@ TABLES['booking'] = (
     user_id BIGINT NOT NULL,
     att_id BIGINT NOT NULL,
     date DATE NOT NULL,
-    time VARCHAR(255) NOT NULL,
-    price BIGINT NOT NULL,
+    time VARCHAR(50) NOT NULL,
+    price BIGINT UNSIGNED NOT NULL,
     FOREIGN KEY(user_id) REFERENCES members(id),
     FOREIGN KEY(att_id) REFERENCES attractions(id)
     ) ENGINE=InnoDB"""
 )
 
-# config = {
-#     'user': 'root',
-#     'password': os.environ.get('MYSQL_KEY'),
-#     'host': 'localhost'
-# }
-# db_config = {
-#     'user': 'root',
-#     'password': os.environ.get('MYSQL_KEY'),
-#     'host': 'localhost',
-#     'database': DB_NAME
-# }
+TABLES['orders'] = (
+    """CREATE TABLE IF NOT EXISTS orders (
+    id BIGINT PRIMARY KEY AUTO_INCREMENT,
+    order_no VARCHAR(18) UNIQUE NOT NULL,
+    date DATE NOT NULL,
+    time VARCHAR(50) NOT NULL,
+    price INT UNSIGNED NOT NULL,
+    att_id BIGINT NOT NULL,
+    user_id BIGINT NOT NULL,
+    created_at TIMESTAMP DEFAULT NOW(),
+    FOREIGN KEY(user_id) REFERENCES members(id),
+    FOREIGN KEY(att_id) REFERENCES attractions(id)
+    ) ENGINE=InnoDB"""
+)
+
+TABLES['payments'] = (
+    """CREATE TABLE IF NOT EXISTS payments (
+    id BIGINT PRIMARY KEY AUTO_INCREMENT,
+    status INT NOT NULL,
+    bank_trans_id VARCHAR(20) UNIQUE NOT NULL,
+    rec_trade_id VARCHAR(20),
+    created_at DATETIME NOT NULL DEFAULT NOW(),
+    order_no VARCHAR(18) NOT NULL,
+    FOREIGN KEY(order_no) REFERENCES orders(order_no)
+    ) ENGINE=InnoDB"""
+)
+
 
 cnx_pool = pooling.MySQLConnectionPool(
     pool_name='travel_pool',
     pool_size=8,
     pool_reset_session=True,
-    **Config.config
+    **Config.mysql_config
 )
 
 
@@ -184,74 +201,6 @@ def process_data():
         cnx.commit()
         att_id += 1
     cnx.close()
-
-
-# def db_connection():
-#     cnx_pool_db = pooling.MySQLConnectionPool(
-#         pool_name='travel_pool',
-#         pool_size=8,
-#         pool_reset_session=True,
-#         **Config.db_config
-#     )
-#     try:
-#         cnx = cnx_pool_db.get_connection()
-#         return cnx
-#     except mysql.connector.PoolError as err:
-#         print('Error: {}'.format(err))
-#     except mysql.connector.Error as err:
-#         print('Something goes wrong: {}'.format(err))
-#
-#
-# def data_query_one(sql, condition):
-#     cnx = db_connection()
-#     cursor = cnx.cursor()
-#     try:
-#         cursor.execute(sql, condition)
-#         return cursor.fetchone()
-#     except mysql.connector.Error as err:
-#         print("Something went wrong: {}".format(err))
-#     finally:
-#         cursor.close()
-#         cnx.close()
-#
-#
-# def data_query_all_dict(sql, condition):
-#     cnx = db_connection()
-#     cursor = cnx.cursor(dictionary=True)
-#     try:
-#         cursor.execute(sql, condition)
-#         return cursor.fetchall()
-#     except mysql.connector.Error as err:
-#         print("Something went wrong: {}".format(err))
-#     finally:
-#         cursor.close()
-#         cnx.close()
-#
-#
-# def data_query_all(sql, condition):
-#     cnx = db_connection()
-#     cursor = cnx.cursor()
-#     try:
-#         cursor.execute(sql, condition)
-#         return cursor.fetchall()
-#     except mysql.connector.Error as err:
-#         print("Something went wrong: {}".format(err))
-#     finally:
-#         cursor.close()
-#         cnx.close()
-#
-#
-# def insert_or_update(sql, condition):
-#     cnx = db_connection()
-#     cursor = cnx.cursor()
-#     try:
-#         cursor.execute(sql, condition)
-#         cnx.commit()
-#     except mysql.connector.Error as err:
-#         print("Something went wrong: {}".format(err))
-#     finally:
-#         cursor.close()
-#         cnx.close()
 
 
 def main():
