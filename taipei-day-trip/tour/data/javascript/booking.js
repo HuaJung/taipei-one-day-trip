@@ -29,7 +29,6 @@ async function loginChecker() {
     };
 };
 
-
 async function removeBooking () {
     const response = await fetch(bookingApi, {'method': 'DELETE'});
     const result = await response.json();
@@ -41,7 +40,7 @@ async function removeBooking () {
 };
 
 async function placeOrder(nameInput, emailInput, phoneInput, prime) {
-    const bookingData = await fetchBookingTour();
+    const bookingData = await fetchAPI(bookingApi);
     const bodyData = {
         'prime': prime,
         'order': {
