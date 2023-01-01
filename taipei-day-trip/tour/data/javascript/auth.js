@@ -1,4 +1,3 @@
-
 const signinModal = document.querySelector('.signin');
 const signupModal = document.querySelector('.signup');
 const signupLink = document.querySelector('#signup');
@@ -48,7 +47,6 @@ signinBtn.addEventListener('click', e => {
             };
             login(data);
     };
-    
 });
 
 signupBtn.addEventListener('click', e => {
@@ -71,9 +69,31 @@ signupBtn.addEventListener('click', e => {
     };
 });
 
+async function ajax(url) {
+    return fetch(url).then(response => response.json());
+};
+
+async function loginTabChecker(){
+    const result = await ajax(userApi);
+    if (result.data !== null) {
+        loginTab.parentNode.removeChild(loginTab);
+        renderMemberMenu();
+        expandMenu()
+        signoutAction();
+        bookingAccess();
+    } else {
+        showLoginModal(loginTab);
+        showLoginModal(bookingTab);
+    };
+};
+
 async function register(data){
     const registerApi = new URL(`/api/user` ,`${window.origin}`);
-    const request = {'method': 'POST', 'headers': {'Content-Type': 'application/json'}, 'body': JSON.stringify(data)}
+    const request = {
+        'method': 'POST', 
+        'headers': {'Content-Type': 'application/json'}, 
+        'body': JSON.stringify(data)
+    };
     const response = await fetch(registerApi, request);
     if (response.status === 200) {
         errorMsg[1].style.color = 'green'
@@ -87,23 +107,7 @@ async function register(data){
     };
 };
 
-
-async function loginTabChecker(){
-    const response = await fetch(userApi);
-    const result = await response.json();
-    if (result.data !== null) {
-        loginTab.className = 'signout';
-        loginTab.textContent = '登出系統';
-        signoutAction();
-        bookingAccess();
-    } else {
-        showLoginModal(loginTab);
-        showLoginModal(bookingTab);
-    };
-};
-
 async function login(data){
-    console.log('hi')
     const request = {
         'method': 'PUT',
         'headers': {'Content-Type': 'application/json'},'body': JSON.stringify(data)
@@ -126,7 +130,6 @@ async function logout() {
     if (result.ok === true) {
         location.reload()
     };
-
 };
 
 function showLoginModal(element) {
@@ -160,4 +163,43 @@ function emptyFieldChecker(input) {
     } else {
         input.setCustomValidity('')
     };
-}
+};
+
+function renderMemberMenu() {   
+    const navItems= document.querySelector('.navitems');
+    const navUl = document.querySelector('.navitems ul')
+
+    const memberMenudiv = document.createElement('div');
+    memberMenudiv.className = 'member-menu';
+
+    const menuUl = document.createElement('ul');
+    menuUl.className = 'menu-items'
+    const li = document.createElement('li');
+
+    const orderHistoryli = li.cloneNode();
+    const link = document.createElement('a');
+    link.href = '/member/orders';
+    link.textContent = '訂單查詢';
+    orderHistoryli.appendChild(link);
+
+    const signoutLi = li.cloneNode();
+    signoutLi.className = 'signout';
+    signoutLi.textContent = '會員登出';
+
+    const memebershipLi = li.cloneNode();
+    memebershipLi.className = 'membership';
+    memebershipLi.textContent = '會員中心';
+
+    menuUl.append(orderHistoryli, signoutLi);
+    memberMenudiv.appendChild(menuUl);
+    navUl.appendChild(memebershipLi);
+    navItems.appendChild(memberMenudiv);
+};
+
+function expandMenu() {
+    const memberMenu = document.querySelector('.member-menu');
+    const membership = document.querySelector('.membership');
+    membership.addEventListener('click', () => {
+        memberMenu.classList.toggle('expand-toggle');
+    });
+};

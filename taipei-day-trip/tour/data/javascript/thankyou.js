@@ -11,8 +11,8 @@ async function loginChecker() {
     } else {
         fetchOder();
     };
+    loader();
 };
-
 
 async function fetchOder() {
     const response = await fetch(orderApi);
@@ -28,6 +28,15 @@ async function fetchOder() {
     };
 };
 
+function loader() {
+    const loader = document.querySelector('.loader');
+    const container = document.querySelector('.container')
+    loader.classList.remove('loader-active');
+    container.style.display = 'block';
+    setTimeout(() => {
+        container.style.opacity = 1;
+    }, 50);
+};
 function renderOderDetail(result){
     orderResult = result.data
     attractionInfo = result.data.trip.attraction;
@@ -52,4 +61,5 @@ function renderOderDetail(result){
     timeLi.textContent = `時間：${tripTime}`;
     costLi.textContent = `費用：新台幣 ${orderResult.price} 元`;
     addressLi.textContent = `地點：${attractionInfo.address}`;
+    
 };

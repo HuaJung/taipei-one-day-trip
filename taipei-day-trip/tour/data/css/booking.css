@@ -2,7 +2,6 @@
     display: grid;
     gap: 15px;
 }
-
 body {
     color: var(--secondary-gray-70);
 }
@@ -14,9 +13,92 @@ h3 {
     font-size: 19px;
     font-weight: 600;
 }
+
+.loader{
+    position: fixed;
+    top: 0;
+    right: 0;
+    width: 100vw;
+    min-height: 100vh;
+    display: none;
+    justify-content: center;
+    align-items: center;
+    background-color: var(--secondary-gray-10);
+    z-index: 1;
+}
+
+.loader-active {
+    display: flex;
+}
+.loader span {
+    display: inline-block;
+    background-color: var(--primary-cyan-70);
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 16px;
+    height: 16px;
+    border-radius: 100%;
+    animation: spin 1s infinite ease-in-out;
+}
+
+.loader span:nth-child(1) {
+    top: 46%;
+    left: 50%;
+    background-color: var(--primary-cyan-50);
+    animation-delay: -2s;
+}
+.loader span:nth-child(2) {
+    top: 48%;
+    left: 53.5%;
+    background-color: var(--primary-cyan-20);
+    animation-delay: -1.825s ;
+}
+.loader span:nth-child(3) {
+    top: 52%;
+    left: 53.5%;
+    background-color: var(--primary-cyan-70);
+    animation-delay: -1.65s;
+}
+.loader span:nth-child(4) {
+    top: 54%;
+    left: 50%;
+    background-color: var(--primary-cyan-50);
+    animation-delay: -1.475s;
+}
+.loader span:nth-child(5) {
+    top: 52%;
+    left: 46.5%;
+    background-color: var(--primary-cyan-20);
+    animation-delay: -1.3s;
+}
+.loader span:nth-child(6) {
+    top: 48%;
+    left: 46.5%;
+    background-color: var(--primary-cyan-50);
+    animation-delay: -1.125s;
+}
+
+@keyframes spin {
+    0% {
+        opacity: 1;
+        transform: scale(1);
+    }
+    20% {
+        opacity: 1;
+    }
+    100% {
+        opacity: 0;
+        transform: scale(0);
+
+    }
+}
 .container{
     margin: 45px auto;
     max-width: 1200px;
+    display: none;
+    opacity: 0;
+    transition: opacity 1s ease-in;
 }
 .wrap {
     margin: 0 15px;
@@ -29,7 +111,6 @@ h3 {
 .grid-card {
     grid-template-columns: repeat(auto-fit, minmax(min(240px, 340px), 1fr));
 }
-
 .card-img img {
     width: 100%;
     height: 200px;
@@ -70,7 +151,6 @@ input, .tpfield{
     border: 1px solid var(--secondary-gray-20);
     box-shadow: 0 0 2px var(--secondary-gray-20) ;
 }
-
 .tappay-field-focus {
     border-color: #66afe9;
     outline: 0;
@@ -112,7 +192,6 @@ input, .tpfield{
     margin-bottom: 20px;
     cursor: pointer;
 }
-
 .no-data {
     padding: 35px 0px;
     font-size: 16px;

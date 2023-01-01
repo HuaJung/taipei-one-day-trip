@@ -10,15 +10,14 @@ TPDirect.setupSDK(
     'sandbox'
     );
 
-
 async function loginChecker() {
-    const response = await fetch(userApi);
-    const userInfo = await response.json();
+    const userInfo = await ajax(userApi);
     if (userInfo.data === null) {
         window.location = window.origin;
     } else {
-        bookingData = await fetchBookingTour();
+        bookingData = await fetchAPI(bookingApi);
         renderBookingPage(userInfo, bookingData);
+        
         const trashIcon = document.getElementsByClassName('fa-trash-can')[0];
         if (trashIcon) {
             trashIcon.addEventListener('click', removeBooking);
@@ -26,24 +25,13 @@ async function loginChecker() {
             tpSetUp();
             filedsUpdate();
         };
+        loader();
     };
 };
 
-async function fetchBookingTour() {
-    const response = await fetch(bookingApi);
-    if (response.status === 403) {
-        window.location = window.origin;
-    } else {
-        const result = await response.json();
-        return result.data
-    };
-};
 
 async function removeBooking () {
-    const response = await fetch(
-        bookingApi, 
-        {'method': 'DELETE'}
-        )
+    const response = await fetch(bookingApi, {'method': 'DELETE'});
     const result = await response.json();
     if (result.ok === true) {
         location.reload()
@@ -51,7 +39,6 @@ async function removeBooking () {
         noData.textContent = '尚未登入，拒絕存取';
     };
 };
-
 
 async function placeOrder(nameInput, emailInput, phoneInput, prime) {
     const bookingData = await fetchBookingTour();
@@ -98,6 +85,15 @@ async function placeOrder(nameInput, emailInput, phoneInput, prime) {
     }; 
 };
 
+function loader() {
+    const loader = document.querySelector('.loader');
+    loader.classList.remove('loader-active');
+    container.style.display = 'block';
+    setTimeout(() => {
+        container.style.opacity = 1;
+    }, 50);
+};
+
 function renderBookingPage(userInfo, data) {
     const username = userInfo.data.name;
     const email = userInfo.data.email;
@@ -125,7 +121,6 @@ function renderBookingPage(userInfo, data) {
         inputTel.type = 'tel' ;
         const tpDiv = div.cloneNode();
         tpDiv.className = 'tpfield';
-
 
         // booking card warpper
         const cardWrap = wrap.cloneNode(true);
@@ -243,7 +238,6 @@ function renderBookingPage(userInfo, data) {
         const errorDiv = div.cloneNode();
         errorDiv.className = 'order-error';
 
-
         checkoutDiv.appendChild(sumDiv);
         checkoutDiv.appendChild(confirmBtn);
 
@@ -308,18 +302,17 @@ function onSubmit(event) {
     const tappayStatus = TPDirect.card.getTappayFieldsStatus()
     // Check can getPrime
     if (tappayStatus.canGetPrime === false) {
-        // alert('cannot get prime')
         return
-    }
+    };
     // Get prime
     TPDirect.card.getPrime((result) => {
         if (result.status !== 0) {
             return
         }
         const prime = result.card.prime;
-        placeOrder(nameField, emailField, phoneField, prime);     
-    })
-}
+        placeOrder(nameField, emailField, phoneField, prime); 
+    });
+};
 
 function tpSetUp () {
     TPDirect.card.setup({
@@ -376,20 +369,22 @@ function tpSetUp () {
             endIndex: 11
         }
     })
+};
 
-}
 function setNumberFormGroupToError(element) {
     const ele = document.getElementById(element);
     ele.classList.add('has-error');
     ele.classList.remove('has-success');
-}
+};
+
 function setNumberFormGroupToSuccess(element) {
     const ele = document.getElementById(element);
     ele.classList.remove('has-error');
     ele.classList.add('has-success');
-}
+};
+
 function setNumberFormGroupToNormal(element) {
     const ele = document.getElementById(element);
     ele.classList.remove('has-error');
     ele.classList.remove('has-success');
-}
+};

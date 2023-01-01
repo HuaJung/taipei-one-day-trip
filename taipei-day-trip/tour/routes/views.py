@@ -24,4 +24,9 @@ def thankyou():
 	return render_template("thankyou.html")
 
 
+@page.route('/member/orders')
+def member_orders():
+	return render_template('orders.html')
+
+
 

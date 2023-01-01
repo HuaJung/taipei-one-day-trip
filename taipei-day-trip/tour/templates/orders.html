@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+{% block title %}
+<title>訂單記錄</title>
+{% endblock %}
+{% block link %}
+<link rel="stylesheet" href="{{url_for('static', filename='css/orders.css')}}">
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="search-orders">
+        <button class="order-history-btn">歷史訂單查詢</button>
+    </div>
+    <div class="no-data"></div>
+    <ul class="accordion">
+    </ul>
+</div>
+
+
+{% endblock %}
+
+{% block script %}
+<script src="{{url_for('static', filename='javascript/orders.js')}}"></script>
+
+{% endblock %}
