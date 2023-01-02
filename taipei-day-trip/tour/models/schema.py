@@ -8,20 +8,24 @@ from marshmallow import Schema, fields, validate, validates_schema, ValidationEr
 class UserSchema(Schema):
     id = fields.Str(dump_only=True)
     name = fields.Str(required=True)
-    email = fields.Email(required=True, validate=validate.Email(error='Not a valid email address'))
+    email = fields.Email(required=True)
     password = fields.Str(required=True)
     phone = fields.Str(required=True)
 
     @validates_schema
-    def validate_email_phone(self, data, **kwargs):
+    def validate_email(self, data, **kwargs):
         errors = {}
         email_pattern = r'^\w+((-\w+)|(\.\w+))*\@[A-Za-z0-9]+((\.|-)[A-Za-z0-9]+)*\.[A-Za-z]+$'
-        space_pattern = r'^\s*$'
         if re.match(email_pattern, data['email']) is None:
             errors['error'] = True
             errors['message'] = 'Not a valid email address'
             raise ValidationError(errors)
-        if len(data['phone']) < 7 or len(data['phone']) > 25 or re.match(space_pattern, data['phone']):
+
+    @validates('phone')
+    def validate_phone(self, value):
+        errors = {}
+        space_pattern = r'^\s*$'
+        if len(value) < 7 or len(value) > 25 or re.match(space_pattern, value):
             errors['error'] = True
             errors['message'] = 'Not a valid phone number'
             raise ValidationError(errors)

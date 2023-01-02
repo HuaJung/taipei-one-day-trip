@@ -1,0 +1,104 @@
+.container {
+    max-width: 1200px;
+    margin: 30px auto;
+}
+.skeleton {
+    opacity: .7;
+    background-color: var(--secondary-gray-20);
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, .1), 0px 0px 2px -1px rgba(0, 0, 0, .6);
+    border-radius: 7px;
+    animation: skeleton-loading 1s infinite alternate;
+}
+.skeleton-text {
+    width: 300px;
+    height: 16px;
+    border-radius: 5px;
+}
+@keyframes skeleton-loading {
+    0% {
+        background: linear-gradient(115deg, var(--secondary-gray-20) 0%, var(--secondary-gray-10) 100%);
+    }
+    50% {
+        background: linear-gradient(115deg, var(--secondary-gray-20), var(--secondary-gray-10));
+    }
+    100% {
+        background: linear-gradient(115deg, var(--secondary-gray-10) 0%, var(--secondary-gray-20) 100%);
+    }
+}
+h4, .modify {
+    opacity: 0;
+    transition: opacity 1s ease;
+}
+
+.profile {
+    margin-bottom: 20px;
+}
+.card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 30px;
+}
+.img{
+    width: 200px;
+    height: 200px;
+    border-radius: 50%;
+    /* overflow: hidden; */
+    box-shadow: 0px 0px 3px 3px var(--shadow-gray);
+}
+img {
+    width: 200px;
+    height: 200px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+input {
+    padding: 5px 0 ;
+    font-size: 16px;
+    line-height: 16px;
+    border: none;
+    margin-right: 10px;
+    border-bottom: 1px solid var(--secondary-gray-20);
+}
+.modify {
+    font-size: 14px;
+    color: var(--primary-cyan-50);
+    cursor: pointer;
+}
+.modify:focus {
+    color: var(--primary-cyan-70);
+}
+.content {
+    padding: 20px;
+}
+.name, .email, .phone, .password {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+}
+.confirm-btn {
+    margin-top: 5px;
+    color: var(--additional-white);
+    background-color: var(--primary-cyan-70);
+    padding: 10px 20px;
+    font-size: 18px;
+    font-weight: 400;
+    border-radius: 7px;
+    border: none;
+    margin-bottom: 10px;
+    transition: all .1s ease-in-out;
+}
+.confirm-btn:hover {
+    transform: scale(.95);
+    box-shadow: 0px 0px 3px 0px var(--shadow-gray);
+    background-color: var(--opacity-cyan-70);
+}
+h4 {
+    font-weight: normal;
+    margin-right: 30px;
+}
+.message {
+    text-align: center;
+    color: red;
+    font-size: 16px;
+}

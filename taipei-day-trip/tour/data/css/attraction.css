@@ -24,11 +24,13 @@
 }
 @keyframes skeleton-loading {
     0% {
-        background: linear-gradient(135deg, var(--secondary-gray-20) 0%, var(--secondary-gray-10) 100%);
+        background: linear-gradient(115deg, var(--secondary-gray-20) 0%, var(--secondary-gray-10) 100%);
     }
-
+    50% {
+        background: linear-gradient(115deg, var(--secondary-gray-20), var(--secondary-gray-10));
+    }
     100% {
-        background: linear-gradient(135deg, var(--secondary-gray-20) 100%, var(--secondary-gray-10) 0%);
+        background: linear-gradient(115deg, var(--secondary-gray-10) 0%, var(--secondary-gray-20) 100%);
     }
 }
 .skeleton-img {

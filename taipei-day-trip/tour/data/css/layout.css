@@ -58,9 +58,10 @@ nav {
     cursor: pointer;
     padding: 15px;
 }
-.navitems li:hover {
+.navitems li:hover{
     color: var(--primary-cyan-50);
 }
+
 /* --------- modal css ---------- */
 .modal-dialog {
     padding: 1em;
@@ -144,7 +145,7 @@ nav {
 /* --------expandable menue---------- */
 .member-menu {
     position: absolute;
-    top: 56px;
+    top: 100%;
     right: 0;
     display: none;
     background-color: var(--additional-white);
@@ -165,6 +166,9 @@ nav {
     font-weight: 400;
 }
 
+.menu-items a:hover{
+    color: var(--primary-cyan-50);
+}
 footer {
     background-color: var(--secondary-gray-50);
     color: var(--additional-white);

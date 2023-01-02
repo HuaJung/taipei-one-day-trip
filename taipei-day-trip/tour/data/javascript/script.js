@@ -18,7 +18,6 @@ getItems(baseApi);
 getCatgories();
 
 
-
 observer = new IntersectionObserver(entries => {
     if (entries[0].isIntersecting >= 0.5 && isLoading === false ) {
         baseApi.searchParams.set('page', page);

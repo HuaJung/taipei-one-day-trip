@@ -40,7 +40,6 @@ signinBtn.addEventListener('click', e => {
     emptyFieldChecker(loginPassword);
     
     if (loginEmail.value && loginPassword.value) {
-        console.log(loginEmail.value);
         const data = {
             "email": loginEmail.value,
             "password": loginPassword.value
@@ -69,9 +68,6 @@ signupBtn.addEventListener('click', e => {
     };
 });
 
-async function ajax(url) {
-    return fetch(url).then(response => response.json());
-};
 
 async function loginTabChecker(){
     const result = await ajax(userApi);
@@ -167,7 +163,8 @@ function emptyFieldChecker(input) {
 
 function renderMemberMenu() {   
     const navItems= document.querySelector('.navitems');
-    const navUl = document.querySelector('.navitems ul')
+    const navUl = document.querySelector('.navitems ul');
+    const link = document.createElement('a');
 
     const memberMenudiv = document.createElement('div');
     memberMenudiv.className = 'member-menu';
@@ -176,11 +173,17 @@ function renderMemberMenu() {
     menuUl.className = 'menu-items'
     const li = document.createElement('li');
 
+    const userAccountLi = li.cloneNode();
+    const userAccountLink = link.cloneNode();
+    userAccountLink.href = '/member';
+    userAccountLink.textContent = '會員帳號';
+    userAccountLi.appendChild(userAccountLink);
+
     const orderHistoryli = li.cloneNode();
-    const link = document.createElement('a');
-    link.href = '/member/orders';
-    link.textContent = '訂單查詢';
-    orderHistoryli.appendChild(link);
+    const orderLink = link.cloneNode();
+    orderLink.href = '/member/orders';
+    orderLink.textContent = '訂單查詢';
+    orderHistoryli.appendChild(orderLink);
 
     const signoutLi = li.cloneNode();
     signoutLi.className = 'signout';
@@ -190,7 +193,7 @@ function renderMemberMenu() {
     memebershipLi.className = 'membership';
     memebershipLi.textContent = '會員中心';
 
-    menuUl.append(orderHistoryli, signoutLi);
+    menuUl.append(userAccountLi, orderHistoryli, signoutLi);
     memberMenudiv.appendChild(menuUl);
     navUl.appendChild(memebershipLi);
     navItems.appendChild(memberMenudiv);

@@ -1,32 +1,26 @@
 const orderHistoryApi = new URL ('/api/orders/history', `${window.origin}`);
 const orderHistoryBtn = document.querySelector('.order-history-btn');
 
-loginChecker()
+
+loginChecker();
 orderHistoryBtn.addEventListener('click', fetchOrderHistory);
 
 
 async function fetchOrderHistory () {
-    ordersData = await fetchAPI(orderHistoryApi);
-    renderOrderHistory(ordersData);
+    ordersResult = await fetchAPI(orderHistoryApi);
+    renderOrderHistory(ordersResult);
 };
 
-async function loginChecker() {
-    const userInfo = await ajax(userApi);
-    if (userInfo.data === null) {
-        window.location = window.origin;
-    } else {
-        return
-    };
-};
-
-function renderOrderHistory(ordersData) {
+function renderOrderHistory(ordersResult) {
     const noData = document.querySelector('.no-data')
-    if (ordersData === null) {
+    if (ordersResult.data === null) {
         noData.textContent = '您還沒有任何訂購紀錄'
+    } else if (ordersResult.error === true) {
+        noData.textContent = '伺服器錯誤，請稍後再試'
     } else {
         const accordionUl = document.querySelector('.accordion')
         accordionUl.innerHTML = ''
-        ordersData.forEach(order => {
+        ordersResult.data.forEach(order => {
             const div = document.createElement('div');
             const li = document.createElement('li');
             

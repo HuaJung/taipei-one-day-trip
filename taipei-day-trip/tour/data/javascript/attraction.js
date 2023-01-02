@@ -37,14 +37,14 @@ bookingBtn.addEventListener('click', (e) => {
     bookingTour(bookingData);
 });
 
-async function loginChecker() {
-    const result = await ajax(userApi);
-    if (result.data === null) {
-        signinModal.showModal();  
-    } else {
-        return
-    };
-};
+// async function loginChecker() {
+//     const result = await ajax(userApi);
+//     if (result.data === null) {
+//         signinModal.showModal();  
+//     } else {
+//         return
+//     };
+// };
 
 async function bookingTour(data) {
     const bookingApi = new URL ('/api/booking/', `${window.origin}`)

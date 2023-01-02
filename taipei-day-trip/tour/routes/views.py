@@ -29,4 +29,9 @@ def member_orders():
 	return render_template('orders.html')
 
 
+@page.route('/member')
+def member():
+	return render_template('member.html')
+
+
 
