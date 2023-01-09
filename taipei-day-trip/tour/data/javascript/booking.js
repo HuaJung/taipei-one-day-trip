@@ -3,22 +3,22 @@ const bookingApi = new URL ('/api/booking', `${window.origin}`);
 const noData = document.querySelector('.no-data');
 let fields;  // Display cvv field
 
-loginChecker();
+bookingLoginChecker();
+
 
 TPDirect.setupSDK(
     126944, 'app_8xl44RzWEKUFlLoQ1iJBWYbX9y05bGt7VCsWthLotm2DtouXs0jbyDSKjidQ',
     'sandbox'
     );
 
-
-async function loginChecker() {
-    const response = await fetch(userApi);
-    const userInfo = await response.json();
+async function bookingLoginChecker() {
+    const userInfo = await ajax(userApi);
     if (userInfo.data === null) {
         window.location = window.origin;
     } else {
-        bookingData = await fetchBookingTour();
+        bookingData = await fetchAPI(bookingApi);
         renderBookingPage(userInfo, bookingData);
+        
         const trashIcon = document.getElementsByClassName('fa-trash-can')[0];
         if (trashIcon) {
             trashIcon.addEventListener('click', removeBooking);
@@ -26,24 +26,12 @@ async function loginChecker() {
             tpSetUp();
             filedsUpdate();
         };
-    };
-};
-
-async function fetchBookingTour() {
-    const response = await fetch(bookingApi);
-    if (response.status === 403) {
-        window.location = window.origin;
-    } else {
-        const result = await response.json();
-        return result.data
+        loader();
     };
 };
 
 async function removeBooking () {
-    const response = await fetch(
-        bookingApi, 
-        {'method': 'DELETE'}
-        )
+    const response = await fetch(bookingApi, {'method': 'DELETE'});
     const result = await response.json();
     if (result.ok === true) {
         location.reload()
@@ -52,9 +40,9 @@ async function removeBooking () {
     };
 };
 
-
 async function placeOrder(nameInput, emailInput, phoneInput, prime) {
-    const bookingData = await fetchBookingTour();
+    let bookingData = await fetchAPI(bookingApi);
+    bookingData = bookingData.data
     const bodyData = {
         'prime': prime,
         'order': {
@@ -98,16 +86,28 @@ async function placeOrder(nameInput, emailInput, phoneInput, prime) {
     }; 
 };
 
-function renderBookingPage(userInfo, data) {
+function loader() {
+    const loader = document.querySelector('.loader');
+    loader.classList.remove('loader-active');
+    container.style.display = 'block';
+    setTimeout(() => {
+        container.style.opacity = 1;
+    }, 50);
+};
+
+function renderBookingPage(userInfo, bookingResult) {
     const username = userInfo.data.name;
     const email = userInfo.data.email;
     const div = document.createElement('div');
     const greeting = document.querySelector('.greeting');
     const greetingName = greeting.querySelector('span');
     greetingName.textContent = username[0].toUpperCase() + username.slice(1);
-    if (data === null) {
+    if (bookingResult.data === null) {
         noData.textContent = '目前沒有任何待預定的行程';
+    } else if (bookingResult.error === true) {
+        noData.textContent = '伺服器錯誤，請稍後再試';
     } else {
+        const bookingData = bookingResult.data;
         const fragment = document.createDocumentFragment();
         const h4 = document.createElement('h4');
         const h3 = document.createElement('h3')
@@ -126,7 +126,6 @@ function renderBookingPage(userInfo, data) {
         const tpDiv = div.cloneNode();
         tpDiv.className = 'tpfield';
 
-
         // booking card warpper
         const cardWrap = wrap.cloneNode(true);
         const cardDiv = div.cloneNode();
@@ -134,19 +133,19 @@ function renderBookingPage(userInfo, data) {
         const cardImg = div.cloneNode();
         cardImg.className = 'card-img';
         const img = document.createElement('img');
-        img.setAttribute('src', data.attraction.image);
+        img.setAttribute('src', bookingData.attraction.image);
         const cardInfoDiv = div.cloneNode();
         cardInfoDiv.className = 'grid-card-info';
         const attractionHeader = h4.cloneNode();
-        attractionHeader.textContent = `台北一日遊： ${data.attraction.name}`;
+        attractionHeader.textContent = `台北一日遊： ${bookingData.attraction.name}`;
         const dateDiv = div.cloneNode();
-        dateDiv.textContent += `日期：${data.date}`;
+        dateDiv.textContent += `日期：${bookingData.date}`;
         const timeDiv = div.cloneNode();
-        timeDiv.textContent = data.time === 'forenoon'? '時間：上午9時至中午12時' : '時間：下午1時至下午5時';
+        timeDiv.textContent = bookingData.time === 'forenoon'? '時間：上午9時至中午12時' : '時間：下午1時至下午5時';
         const costDiv = div.cloneNode();
-        costDiv.textContent = `費用：新台幣 ${data.price} 元`;
+        costDiv.textContent = `費用：新台幣 ${bookingData.price} 元`;
         const addressDiv = div.cloneNode();
-        addressDiv.textContent = `地點：${data.attraction.address}`;
+        addressDiv.textContent = `地點：${bookingData.attraction.address}`;
         const trashIcon = document.createElement('i')
         trashIcon.className = 'fa-solid fa-trash-can';
 
@@ -235,7 +234,7 @@ function renderBookingPage(userInfo, data) {
         checkoutDiv.className = 'checkout';
         const sumDiv = div.cloneNode();
         sumDiv.className = 'sum'
-        sumDiv.textContent = `總價：新台幣 ${data.price} 元`
+        sumDiv.textContent = `總價：新台幣 ${bookingData.price} 元`
         const confirmBtn = document.createElement('button');
         confirmBtn.className = 'confirm-btn';
         confirmBtn.type = 'submit';
@@ -243,10 +242,7 @@ function renderBookingPage(userInfo, data) {
         const errorDiv = div.cloneNode();
         errorDiv.className = 'order-error';
 
-
-        checkoutDiv.appendChild(sumDiv);
-        checkoutDiv.appendChild(confirmBtn);
-
+        checkoutDiv.append(sumDiv, confirmBtn, errorDiv);
         fragment.append(cardWrap, contactWrap, paymentWrap, checkoutDiv);
         container.appendChild(fragment);
     };
@@ -308,18 +304,17 @@ function onSubmit(event) {
     const tappayStatus = TPDirect.card.getTappayFieldsStatus()
     // Check can getPrime
     if (tappayStatus.canGetPrime === false) {
-        // alert('cannot get prime')
         return
-    }
+    };
     // Get prime
     TPDirect.card.getPrime((result) => {
         if (result.status !== 0) {
             return
         }
         const prime = result.card.prime;
-        placeOrder(nameField, emailField, phoneField, prime);     
-    })
-}
+        placeOrder(nameField, emailField, phoneField, prime); 
+    });
+};
 
 function tpSetUp () {
     TPDirect.card.setup({
@@ -376,20 +371,22 @@ function tpSetUp () {
             endIndex: 11
         }
     })
+};
 
-}
 function setNumberFormGroupToError(element) {
     const ele = document.getElementById(element);
     ele.classList.add('has-error');
     ele.classList.remove('has-success');
-}
+};
+
 function setNumberFormGroupToSuccess(element) {
     const ele = document.getElementById(element);
     ele.classList.remove('has-error');
     ele.classList.add('has-success');
-}
+};
+
 function setNumberFormGroupToNormal(element) {
     const ele = document.getElementById(element);
     ele.classList.remove('has-error');
     ele.classList.remove('has-success');
-}
+};

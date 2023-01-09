@@ -1,3 +1,43 @@
+.loader {
+    position: absolute;
+    top: 0px;
+    left: 0;
+    display: none;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    width: 100vw; 
+    background-color: var(--secondary-gray-10);
+}
+.loader-active {
+    display: flex;
+}
+.loader span {
+    display: inline-block;
+    background-color: var(--primary-cyan-50);
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    margin: 0 8px;
+    animation: bounce .6s infinite alternate;
+}
+.loader span:nth-child(2) {
+    background-color: var(--primary-cyan-70);
+    animation-delay: .2s;
+}
+.loader span:nth-child(3) {
+    background-color: var(--primary-cyan-20);
+    animation-delay: .4s;
+}
+
+@keyframes bounce {
+    from {
+        transform: translate3d(0);
+    }
+    to {
+        transform: translate3d(0, -16px, 0);
+    }
+}
 .banner {
     display: grid;
     grid-template-columns: 1fr minmax(360px, 1200px) 1fr;
@@ -49,7 +89,6 @@
     font-size: 22px;
     border: none;
     border-radius: 0px 6px 6px 0px;
-    cursor: pointer;
     color: var(--additional-white);
     vertical-align: middle;  /* make input & button align */
 }
@@ -84,7 +123,9 @@ form {
     font-size: 0px;
 }
 .container {
-    display: grid;
+    display: none;
+    opacity: 0;
+    transition: opacity 1s ease-in;
     grid-template-columns: auto minmax(min(360px, 100%), 1200px) auto;
     margin-bottom: 90px;
 }
@@ -95,12 +136,16 @@ form {
     justify-content: center;
     gap: 30px 30px;
 }
+.card-wrapper a:hover .card{
+    transform: scale(1.05);
+    box-shadow: 0px 0px 5px 3px rgba(0, 0, 0, .2);
+}
 .card {
     display: grid;
     grid-template-rows: auto 1fr;
     border: 1px solid rgb(209, 209, 209);
     border-radius: 7px;
-    cursor: pointer;
+    transition: transform .5s;
 }
 .card img {
     grid-row: 1/auto;

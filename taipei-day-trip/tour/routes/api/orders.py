@@ -25,7 +25,7 @@ def token_required(f):
     return decorated
 
 
-class Orders(Resource):
+class PlacingOrders(Resource):
     @token_required
     def post(self, user_id):
         errors = order_schema.validate(request.json)
@@ -93,7 +93,7 @@ class Orders(Resource):
             return make_response(jsonify(error=True, message='內部伺服器錯誤，請稍後再試。'), 500)
 
 
-class Order(Resource):
+class OrderID(Resource):
     @token_required
     def get(self, order_id, user_id):
         order_sql = """SELECT o.order_no AS number, o.price, 
@@ -124,4 +124,30 @@ class Order(Resource):
             order_info['contact'] = contact_dict
             return make_response(jsonify(data=order_info))
         return make_response(jsonify(data=None))
+
+
+class OrderHistory(Resource):
+    @token_required
+    def get(self, user_id):
+        order_history_sql = """SELECT o.order_no AS number, o.price, o.created_at,
+        CONCAT_WS(',', a.id, a.name, o.date, o.time) AS trip, p.status FROM orders o
+        INNER JOIN attractions a ON a.id = o.att_id INNER JOIN payments p ON o.order_no = p.order_no
+        WHERE o.user_id = %s"""
+        order_history = data_query_all_dict(order_history_sql, (user_id,))
+        if order_history:
+            for order in order_history:
+                trip_lst = order['trip'].split(',')
+                trip_dict = {
+                    'attraction': {
+                        'id': trip_lst[0],
+                        'name': trip_lst[1],
+                    },
+                    'date': trip_lst[2],
+                    'time': trip_lst[3]
+                }
+                order['trip'] = trip_dict
+            return make_response(jsonify(data=order_history))
+        return make_response(jsonify(data=None))
+
+
 

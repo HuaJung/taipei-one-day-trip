@@ -11,4 +11,6 @@
     --additional-blue-gray: #AABBCC;
     --additional-gradient-dark-cyan: linear-gradient(270deg, #337788 0%, #66AABB 100%);
     --additional-gradient-ligtht-cyan: linear-gradient(135deg, #AADDEE 0%, #66AABB 100%);
+    --opacity-cyan-70:#448899ea;
+    --shadow-gray: rgba(0, 0, 0, .4);
 }

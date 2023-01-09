@@ -28,8 +28,9 @@ def create_app(test_config=None):
     api.add_resource(bookings.Booking, '/')
 
     api = Api(orders.order_api)
-    api.add_resource(orders.Orders, '/orders')
-    api.add_resource(orders.Order, '/order/<int:order_id>')
+    api.add_resource(orders.PlacingOrders, '/orders')
+    api.add_resource(orders.OrderID, '/order/<int:order_id>')
+    api.add_resource(orders.OrderHistory, '/orders/history')
 
     app.register_blueprint(att.attraction_api, url_prefix='/api')
     app.register_blueprint(users.user_api, url_prefix='/api/user')

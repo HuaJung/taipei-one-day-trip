@@ -1,0 +1,42 @@
+{% extends 'base.html' %}
+{% block title %}
+<title>會員資料</title>
+{% endblock %}
+{% block link %}
+<link rel="stylesheet" href="{{url_for('static', filename='css/member.css')}}">
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="profile card">
+        <div class="profile img skeleton">
+        </div>
+        <div class="profile content">
+            <div class="profile name skeleton skeleton-text">
+                <h4>姓名</h4>
+                <span class="modify">修改</span>
+            </div>
+            <div class="profile email skeleton skeleton-text">
+                <h4>郵箱</h4> 
+                <span class="modify">修改</span>
+            </div>
+            <div class="profile phone skeleton skeleton-text">
+                <h4>電話</h4>
+                <span class="modify">修改</span>
+            </div>
+            <div class="profile password skeleton skeleton-text">
+                <h4>密碼</h4>
+                <span class="modify">修改</span>
+            </div>
+        </div>
+    </div>
+    <div class="message"></div>
+</div>
+
+
+{% endblock %}
+
+{% block script %}
+<script src="{{url_for('static', filename='javascript/member.js')}}"></script>
+
+{% endblock %}

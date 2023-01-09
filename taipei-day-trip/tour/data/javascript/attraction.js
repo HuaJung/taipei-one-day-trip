@@ -10,6 +10,7 @@ const bookingError = document.querySelector('.booking-error');
 
 fetchAttraction(attractionAPI);
 
+
 // available date from tomorrow
 today.setDate(today.getDate() + 1);
 datePicker.min = today.toLocaleDateString('en-ca');
@@ -36,15 +37,14 @@ bookingBtn.addEventListener('click', (e) => {
     bookingTour(bookingData);
 });
 
-async function loginChecker() {
-    const response = await fetch(userApi);
-    const result = await response.json();
-    if (result.data === null) {
-        signinModal.showModal();  
-    } else {
-        return
-    };
-};
+// async function loginChecker() {
+//     const result = await ajax(userApi);
+//     if (result.data === null) {
+//         signinModal.showModal();  
+//     } else {
+//         return
+//     };
+// };
 
 async function bookingTour(data) {
     const bookingApi = new URL ('/api/booking/', `${window.origin}`)
@@ -66,40 +66,60 @@ async function bookingTour(data) {
 };
 
 
-async function ajax(url) {
-    return fetch(url).then((response) => {
-        return response.json();
-    });
-};
-
 async function fetchAttraction(url) {
     try {
-        const result = await ajax(url);
-        const div = document.createElement('div');
-        const fragment = document.createDocumentFragment();
-        if (result.error === true) {
-            renderNoData(div, fragment)
+        const response = await fetch(url);
+        const result = await response.json();
+        if (response.status === 400) {
+            const errorMsg = document.createTextNode('無相關景點')
+            renderNoData(errorMsg)
+        } else if (response.status === 200){
+            renderAttraction(result);
+            skeletonLoader();
+            const carouselDots = carousel.querySelector('.carousel-nav');
+            const slides = carousel.querySelector('.grid-slides');
+            carouselIndicator(carouselDots, slides);
+            carouselArrowBtns(carouselDots, slides);
         } else {
-            renderAttraction(result, div, fragment)
+            const errorMsg = document.createTextNode('內部伺服器錯誤')
+            renderNoData(errorMsg);
         };
-        const carouselDots = carousel.querySelector('.carousel-nav');
-        const slides = carousel.querySelector('.grid-slides');
-        carouselIndicator(carouselDots, slides);
-        carouselArrowBtns(carouselDots, slides);
-
     } catch(error) {
         console.log(`Error: ${error}`);
     };
 };
-
-function renderNoData(div, fragment) {
-    const noData = div.cloneNode();
+function skeletonLoader() {
+    const skeletons = document.querySelectorAll('.skeleton');  
+    const skeletonTxts = document.querySelectorAll('.skeleton-text'); 
+    const headers = document.querySelectorAll('h5');
+    const form = document.querySelector('.booking-form form');
+    skeletons.forEach(skeleton => 
+        skeleton.classList.remove('skeleton'));
+    skeletonTxts.forEach((skeletonTxt) => {
+        if (skeletonTxt.parentNode) {
+            skeletonTxt.parentNode.removeChild(skeletonTxt);
+        };
+    });
+    headers.forEach(header => 
+        header.style.display = 'block');
+    form.style.display = 'block';
+}
+function renderNoData(errorMsg) {
+    const container = document.querySelector('.container')
+    const noData = document.createElement('div');
+    const oppsFaceIcon = document.createElement('i');
+    const p = document.createElement('p')
+    oppsFaceIcon.className = 'fa-regular fa-face-dizzy'
     noData.className = 'no-data'
-    noData.textContent = result.message;
-    fragment.appendChild(noData);
+    p.appendChild(errorMsg);
+    noData.append(oppsFaceIcon, p)
+    container.innerHTML = ''
+    container.appendChild(noData);
 };
 
-function renderAttraction(result, div, fragment) {       
+function renderAttraction(result) {      
+    const div = document.createElement('div');
+    const fragment = document.createDocumentFragment(); 
     const p = document.createElement('p')
 
     const title = document.querySelector('title');

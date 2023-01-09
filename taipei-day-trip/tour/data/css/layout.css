@@ -9,17 +9,19 @@
 }
 body {
     font-family:'Noto Sans TC', sans-serif;
-    padding-top:55px;
+    padding-top: 56px;
     color: var(--secondary-gray-70);
 }
 a {
     text-decoration: none;
 }
+button {
+    cursor: pointer;
+}
 nav {
     display: grid;   
     align-items: center;
     grid-template-columns: 1fr minmax(min(360px, 100%), 1200px) 1fr;
-    padding: 5px 0 5px 0;
     position: fixed;
     top: 0;
     left: 0;
@@ -32,15 +34,16 @@ nav {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
     grid-column: 2/3;
+    position: relative;
 }
-.navitems  h2 {
+.navitems h2 {
     grid-column: 1/2;
-    padding: 5px 0px 5px 15px;
+    padding: 10px 0px 10px 15px;
 }
 .navitems h2 a{
     color: #448899;
 }
-.navitems ul {
+.items{
     grid-column: 2/3;
     text-align: end;
     font-size: 15px;
@@ -49,17 +52,18 @@ nav {
     align-items: center;
     padding: 0 15px 0 0;
 }
-.navitems ul li:nth-of-type(1) {
-    padding-right: 13px;
-
-}
 .navitems li {
     color: var(--secondary-gray-70);
     font-weight: 400;
     cursor: pointer;
+    padding: 15px;
 }
+.navitems li:hover{
+    color: var(--primary-cyan-50);
+}
+
 /* --------- modal css ---------- */
-.modal {
+.modal-dialog {
     padding: 1em;
     max-width: 340px;
     border: 0;
@@ -71,7 +75,7 @@ nav {
     box-shadow: 0 0 1em rgba(0, 0, 0, .3);
     margin: 80px auto;
 }
-.modal::backdrop {
+.modal-dialog::backdrop {
     background-color: rgba(0, 0, 0, .3);
 }
 #signin, #signup {
@@ -80,7 +84,7 @@ nav {
 .grid-title {
     display: grid;
 }
-.modal h3 {
+.modal-dialog h3 {
     grid-column: 1/-1;
     grid-row: 1/1;
     font-size: 24px;
@@ -94,12 +98,12 @@ nav {
     text-align: end;
     font-size: 20px;
 }
-.modal form {
+.modal-dialog form {
     display: grid;
     gap: 5px;
     margin-top: 10px;
 }
-.modal form input {
+.modal-dialog form input {
     padding: 15px;
     font-size: 16px;
     font-weight: 500;
@@ -109,7 +113,7 @@ nav {
     border: 1px solid var(--secondary-gray-20);
     box-shadow: 0 0 2px var(--secondary-gray-20) ;
 }
-.modal input[type=submit] {
+.modal-dialog input[type=submit] {
     background-color: var(--primary-cyan-70);
     color: var(--additional-white);
     font-size: 17px;
@@ -117,20 +121,15 @@ nav {
     line-height: 13px;
     cursor: pointer;
 }
-
 .reminder {
     color: var(--secondary-gray-70);
     text-align: center;
     margin-top: 10px;
 }
-#signup, #signin:hover{
+#signup:hover, #signin:hover{
     text-decoration: underline;
 }
-
 .auth-error {
-    /* background: rgba(245, 178, 189, 0.5);
-    border: .5px solid rgba(245, 178, 189, 1);
-    border-radius: 6px; */
     padding: 5px 0;
     text-align: center;
     color: rgb(177, 34, 34);
@@ -142,12 +141,39 @@ nav {
 .auth-error:empty {
     display: none;
 }
+
+/* --------expandable menue---------- */
+.member-menu {
+    position: absolute;
+    top: 100%;
+    right: 0;
+    display: none;
+    background-color: var(--additional-white);
+}
+.expand-toggle {
+    display: block;
+}
+.menu-items {
+    padding: 0 15px;
+    font-size: 15px;
+    border: 1px solid var(--secondary-gray-20);
+}
+.menu-items li {
+    border-bottom: 1px solid var(--secondary-gray-20);
+}
+.menu-items a {
+    color: var(--secondary-gray-70);
+    font-weight: 400;
+}
+
+.menu-items a:hover{
+    color: var(--primary-cyan-50);
+}
 footer {
-    background-color: gray;
-    color: whitesmoke;
-    height: 85px ;
+    background-color: var(--secondary-gray-50);
+    color: var(--additional-white);
     font-size: 14px;
-    line-height: 85px;
     text-align: center;
+    padding: 40px 0;
 
 }
