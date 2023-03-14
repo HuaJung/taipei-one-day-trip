@@ -2,10 +2,30 @@
 The project aims to provide a tourism e-commerce website for users easily to make a day travel in Taipei. The platform features over 50 of Taipei's tourist attractions, all of which can be easily explored, booked, and securely paid online by members. It also offers membership system allowing users to update their personal informatioan and view their booking history.
 
 ## Table of Contents
-+ [Test Account](#test-account)
-+ [Features](#features)
 + [Tech Stack](#tech-stack)
-<br>
++ [Test Account](#test-account)
++ [Features](#features)  
+
+---
+
+## 📍Tech Stack
+This project utilized front-end/back-end separation for development, with the UI and specifications provided by WeHelp.
+- [Figma prototype](https://www.figma.com/file/MZkYBH31H5gyLoZoZq116j) 
+- [API documentation](https://app.swaggerhub.com/apis-docs/padax/taipei-day-trip/1.1.0) 
+
+### ⭐️ Frontend
+
++ Developed infinite scroll, carousel slides, pop-up modal using pure `JavaScript`
++ Implemented `RWD` with CSS Media Queries, Flex, Grid 
++ Made AJAX calls by `fetch API`
+
+### ⭐️ Backend
+
++ Developed RESTful APIs using `Python Flask` and `MySQL`
++ Integrated the `TapPay SDK` to the payment system
++ Deployed the website on `AWS EC2`
+
+---
 
 ## 📍Test Account
 
@@ -18,8 +38,7 @@ The project aims to provide a tourism e-commerce website for users easily to mak
   | MM / YY | 12 / 26 |
   | CCV | 123 |
 
-<br>
-<br>
+---
 
 ## 📍Features
 ### ✔︎&nbsp; Infinite Scroll  
@@ -44,23 +63,3 @@ The project aims to provide a tourism e-commerce website for users easily to mak
 ![image](https://github.com/HuaJung/taipei-one-day-trip/blob/main/member_login.gif)
 
 ![image](https://github.com/HuaJung/taipei-one-day-trip/blob/main/member_account.gif)  
-
-<br>
-<br>
-
-## 📍Tech Stack
-This project utilized front-end/back-end separation for development, with the UI and specifications provided by WeHelp.
-- [Figma prototype](https://www.figma.com/file/MZkYBH31H5gyLoZoZq116j) 
-- [API documentation](https://app.swaggerhub.com/apis-docs/padax/taipei-day-trip/1.1.0) 
-
-### ⭐️ Frontend
----
-+ Developed infinite scroll, carousel slides, pop-up modal using pure `JavaScript`
-+ Implemented `RWD` with CSS Media Queries, Flex, Grid 
-+ Made AJAX calls by `fetch API`
-
-### ⭐️ Backend
----
-+ Developed RESTful APIs using `Python Flask` and `MySQL`
-+ Integrated the `TapPay SDK` to the payment system
-+ Deployed the website on `AWS EC2`
