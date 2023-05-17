@@ -5,6 +5,7 @@ The project aims to provide a tourism e-commerce website for users easily to mak
 + [Tech Stack](#tech-stack)
 + [Test Account](#test-account)
 + [Features](#features)  
++ [Contact](#contact)
 
 ---
 
@@ -62,4 +63,9 @@ This project utilized front-end/back-end separation for development, with the UI
 ### ✔︎&nbsp;  Member System
 ![image](https://github.com/HuaJung/taipei-one-day-trip/blob/main/member_login.gif)
 
-![image](https://github.com/HuaJung/taipei-one-day-trip/blob/main/member_account.gif)  
+![image](https://github.com/HuaJung/taipei-one-day-trip/blob/main/member_account.gif) 
+
+---
+
+## 📍Contact
+- Email: mspanda1026@gmail.com
